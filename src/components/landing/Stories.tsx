@@ -9,9 +9,9 @@ export function Stories() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold mb-4">
-              Hoje eles vivem depots de seus depoimentos de como o KrakenClass os ajudou
+              今日、彼らはKrakenClassがどのように役立ったかについての証言の後に生きています
             </h2>
-            <p>Nossos alunos estão transformando suas vidas e alcançando resultados incríveis. Veja o que eles estão compartilhando nas redes sociais sobre suas jornadas com o KrakenClass.</p>
+            <p>私たちの生徒たちは人生を変え、信じられないほどの結果を達成しています。彼らがソーシャルメディアでKrakenClassとの旅について共有していることをご覧ください。</p>
           </div>
           <div className="relative h-[500px]">
             <Carousel opts={{ loop: true }}>

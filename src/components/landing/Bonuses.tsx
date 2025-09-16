@@ -2,21 +2,21 @@ import { Check } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const bonus1 = [
-  "Aulas sobre copywriting",
-  "Aulas sobre tráfego pago",
-  "Aulas sobre criação de criativos",
-  "Aulas sobre contingência",
-  "Aulas sobre como vender no X1",
-  "Aulas sobre como criar um VSL",
-  "Aulas sobre como contratar um gestor de tráfego",
+  "コピーライティングのクラス",
+  "有料トラフィックのクラス",
+  "クリエイティブ作成のクラス",
+  "コンティンジェンシーのクラス",
+  "X1での販売方法のクラス",
+  "VSLの作成方法のクラス",
+  "トラフィックマネージャーの雇い方のクラス",
 ];
 
 const bonus2 = [
-    "Close friends com aulas semanais",
-    "Suporte individual no WhatsApp",
-    "Análise de perfil e produto",
-    "Acesso a todos os meus produtos",
-    "Direito a afiliação em todos os meus produtos",
+    "毎週のクラスがある親しい友人",
+    "WhatsAppでの個別サポート",
+    "プロフィールと製品の分析",
+    "すべての私の製品へのアクセス",
+    "すべての私の製品へのアフィリエイト権",
 ]
 
 export function Bonuses() {
@@ -24,12 +24,12 @@ export function Bonuses() {
     <section className="py-20 bg-black">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-12 text-white">
-          E ainda tem mais... BÔNUS EXCLUSIVOS
+          そして、さらに... 限定ボーナス
         </h2>
         <div className="grid md:grid-cols-2 gap-8">
           <Card className="bg-green-900/30 border-green-700 text-white">
             <CardHeader>
-              <CardTitle className="text-center text-2xl">BÔNUS 1: CURSO DE VENDAS ONLINE</CardTitle>
+              <CardTitle className="text-center text-2xl">ボーナス1：オンライン販売コース</CardTitle>
             </CardHeader>
             <CardContent>
                 <ul className="space-y-3">
@@ -40,13 +40,13 @@ export function Bonuses() {
                         </li>
                     ))}
                 </ul>
-                <p className="text-center font-bold text-lg mt-6">Vendido separadamente por <span className="line-through">R$497</span></p>
-                <p className="text-center font-bold text-2xl text-green-400">DE GRAÇA!</p>
+                <p className="text-center font-bold text-lg mt-6">個別販売価格 <span className="line-through">R$497</span></p>
+                <p className="text-center font-bold text-2xl text-green-400">無料！</p>
             </CardContent>
           </Card>
           <Card className="bg-red-900/30 border-red-700 text-white">
             <CardHeader>
-              <CardTitle className="text-center text-2xl">BÔNUS 2: MENTORIA INDIVIDUAL</CardTitle>
+              <CardTitle className="text-center text-2xl">ボーナス2：個別メンターシップ</CardTitle>
             </CardHeader>
             <CardContent>
                 <ul className="space-y-3">
@@ -57,8 +57,8 @@ export function Bonuses() {
                         </li>
                     ))}
                 </ul>
-                <p className="text-center font-bold text-lg mt-6">Vendido separadamente por <span className="line-through">R$1.000</span></p>
-                <p className="text-center font-bold text-2xl text-red-400">DE GRAÇA!</p>
+                <p className="text-center font-bold text-lg mt-6">個別販売価格 <span className="line-through">R$1.000</span></p>
+                <p className="text-center font-bold text-2xl text-red-400">無料！</p>
             </CardContent>
           </Card>
         </div>

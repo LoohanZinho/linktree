@@ -5,16 +5,16 @@ export function FinalCta() {
     <section className="py-20 bg-black">
       <div className="container mx-auto px-4 max-w-3xl text-center">
         <h2 className="text-3xl font-bold text-primary mb-4">
-          Essa é a chance que você sempre pediu
+          これはあなたがいつも求めていたチャンスです
         </h2>
         <div className="text-gray-400 space-y-4 mb-8">
-            <p>O acesso a todo o passo a passo que você precisa para sair do zero e fazer de 4 a 10 mil reais por mês, sem aparecer, de forma simples e direta.</p>
-            <p>Tudo o que eu demorei 4 anos para aprender, testar e validar, você terá acesso por um valor irrisório.</p>
-            <p>Clique no botão abaixo para garantir sua vaga com o desconto de lançamento e ter acesso a todos os bônus.</p>
-            <p>Nos vemos do outro lado!</p>
+            <p>ゼロから始めて、月に4,000から10,000レアルを稼ぐために必要なすべてのステップバイステップへのアクセス。シンプルかつ直接的な方法で、顔を出す必要はありません。</p>
+            <p>私が4年間かけて学び、テストし、検証したすべてに、ごくわずかな金額でアクセスできます。</p>
+            <p>下のボタンをクリックして、発売記念割引であなたの場所を確保し、すべてのボーナスにアクセスしてください。</p>
+            <p>向こう側でお会いしましょう！</p>
         </div>
         <Button size="lg" className="bg-primary text-black font-bold text-lg w-full md:w-auto hover:bg-primary/90 transition-transform duration-300 hover:scale-105">
-            QUERO ENTRAR AGORA MESMO
+            今すぐ参加したい
         </Button>
       </div>
     </section>

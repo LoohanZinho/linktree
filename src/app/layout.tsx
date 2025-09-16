@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'KrakenClass',
-  description: 'Aprenda a criar e vender produtos digitais',
+  description: 'デジタル製品の作成と販売方法を学ぶ',
 };
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="ja" className="dark">
       <body className={`${inter.variable} font-sans`}>{children}
       <Toaster />
       </body>

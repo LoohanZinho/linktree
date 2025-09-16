@@ -4,18 +4,18 @@ import { DollarSign, ShieldCheck, Video } from "lucide-react";
 const features = [
   {
     icon: <DollarSign className="w-8 h-8 text-primary" />,
-    title: "Acesso vitalício ao treinamento completo",
-    description: "Pague uma vez e acesse para sempre, incluindo todas as futuras atualizações.",
+    title: "トレーニングへの永久アクセス",
+    description: "一度支払えば、将来のすべてのアップデートを含め、永久にアクセスできます。",
   },
   {
     icon: <Video className="w-8 h-8 text-primary" />,
-    title: "Aulas 100% práticas e diretas ao ponto",
-    description: "Sem enrolação. Aulas focadas em te ensinar o que realmente importa para ter resultados.",
+    title: "100%実践的で要点を押さえたクラス",
+    description: "回りくどい説明はありません。結果を出すために本当に重要なことを教えることに焦点を当てたクラスです。",
   },
   {
     icon: <ShieldCheck className="w-8 h-8 text-primary" />,
-    title: "Garantia incondicional de 7 dias",
-    description: "Se não gostar, peça seu dinheiro de volta. Risco zero para você.",
+    title: "7日間の無条件保証",
+    description: "気に入らなければ、返金をお求めください。あなたにリスクはありません。",
   },
 ];
 
@@ -24,9 +24,9 @@ export function MoreFeatures() {
     <section className="py-20 bg-black">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-4 text-white">
-          Para melhorar ainda mais...
+          さらに良くするために...
         </h2>
-        <p className="text-gray-400 text-center mb-12">Você terá acesso a tudo isso</p>
+        <p className="text-gray-400 text-center mb-12">これらすべてにアクセスできます</p>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <Card key={index} className="bg-gray-900 border-gray-800 text-center transition-transform duration-300 hover:scale-105">

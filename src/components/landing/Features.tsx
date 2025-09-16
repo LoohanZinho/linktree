@@ -4,18 +4,18 @@ import { Briefcase, Users, Zap } from "lucide-react";
 const features = [
   {
     icon: <Briefcase className="w-8 h-8 text-primary" />,
-    title: "Criação de Produtos Digitais",
-    description: "Aprenda a criar e-books, cursos em vídeo, mentorias e muito mais.",
+    title: "デジタル製品の作成",
+    description: "電子書籍、ビデオコース、メンターシップなどの作成方法を学びます。",
   },
   {
     icon: <Zap className="w-8 h-8 text-primary" />,
-    title: "Estratégias de Vendas",
-    description: "Domine o tráfego pago (Facebook Ads) e estratégias de vendas que convertem.",
+    title: "販売戦略",
+    description: "有料トラフィック（Facebook広告）とコンバージョンにつながる販売戦略をマスターします。",
   },
   {
     icon: <Users className="w-8 h-8 text-primary" />,
-    title: "Marketing de Conteúdo",
-    description: "Crie conteúdo que atrai e engaja sua audiência, gerando autoridade e vendas.",
+    title: "コンテンツマーケティング",
+    description: "オーディエンスを引き付け、エンゲージメントを高め、権威と売上を生み出すコンテンツを作成します。",
   },
 ];
 
@@ -24,7 +24,7 @@ export function Features() {
     <section className="py-20 bg-black">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-12 text-white">
-          VOCÊ VAI APRENDER
+          あなたが学ぶこと
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (

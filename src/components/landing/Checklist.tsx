@@ -2,9 +2,9 @@ import { CheckCircle2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const checklistItems = [
-    { title: "Como ter uma mentalidade de sucesso", description: "O mindset que você precisa para começar a empreender no digital." },
-    { title: "Como escolher o nicho de mercado ideal", description: "Os melhores nichos para atuar e como escolher o mais lucrativo para você." },
-    { title: "Como validar e criar seu primeiro produto", description: "O passo a passo para criar um produto digital que vende todos os dias." },
+    { title: "成功するためのマインドセットを持つ方法", description: "デジタルで起業するために必要なマインドセット。" },
+    { title: "理想的な市場ニッチの選び方", description: "活動するのに最適なニッチと、あなたにとって最も収益性の高いものを選ぶ方法。" },
+    { title: "最初の製品を検証して作成する方法", description: "毎日売れるデジタル製品を作成するためのステップバイステップ。" },
 ]
 
 export function Checklist() {
