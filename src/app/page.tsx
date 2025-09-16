@@ -101,7 +101,7 @@ export default function Page() {
               </div>
             </button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 pt-2 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+          <CollapsibleContent className="space-y-2 pt-2">
             <a
               href="https://gerenteinteligente.com/"
               target="_blank"
