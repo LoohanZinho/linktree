@@ -125,7 +125,7 @@ export default function Page() {
                 <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
                 <div className="relative z-10 flex items-center justify-center gap-3">
                   <Coins className="h-6 w-6" />
-                  Gerente Inteligente FInanceiro
+                  Gerente Inteligente Financeiro
                 </div>
               </button>
             </a>
