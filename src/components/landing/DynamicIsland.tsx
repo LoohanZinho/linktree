@@ -11,7 +11,7 @@ export function DynamicIsland() {
           </div>
           <span className="font-bold text-white text-lg hidden sm:inline">KrakenClass</span>
         </div>
-        <Button className="bg-primary text-primary-foreground font-bold hover:bg-primary/90 text-sm rounded-full px-5 py-2 h-auto transition-transform hover:scale-105">
+        <Button className="shimmer-button bg-primary text-primary-foreground font-bold hover:bg-primary/90 text-sm rounded-full px-5 py-2 h-auto transition-transform hover:scale-105">
           COMPRAR AGORA
         </Button>
       </div>
