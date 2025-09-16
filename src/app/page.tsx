@@ -85,14 +85,26 @@ export default function Page() {
         data-ai-hint="animated background"
         unoptimized
       />
-      <div className="mt-8 sm:mt-12 flex flex-col items-center text-center">
+      <div className="relative w-full max-w-sm">
         <Image
-          src="https://instagram.fbel10-1.fna.fbcdn.net/v/t51.2885-19/525781313_18069955340118184_3013822007023453116_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fbel10-1.fna.fbcdn.net&_nc_cat=104&_nc_oc=Q6cZ2QEo_wGtXJJvmSlZOaOGDJsjR__iqRr21DH8XkYNFwGa2j1Ynn_GD1SR5vs966PW0KQ&_nc_ohc=7jvGF4nvCMsQ7kNvwElDsmc&_nc_gid=BhQLg5blS1hu_htMfDrhyA&edm=ALGbJPMBAAAA&ccb=7-5&oh=00_AfbNQJZ3P41cdBeWq7Lnzb4HNlyUvA8nX1SWlmIrM6OPog&oe=68CF8FB1&_nc_sid=7d3ac5"
-          alt="Foto de Perfil"
-          width={120}
-          height={120}
-          className="rounded-full border-4 border-gray-800/50 shadow-lg md:w-[150px] md:h-[150px]"
+          src="https://i.imgur.com/601NhSJ.jpeg"
+          alt="Banner"
+          width={400}
+          height={150}
+          className="w-full h-36 object-cover rounded-2xl"
+          data-ai-hint="header banner"
         />
+        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2">
+          <Image
+            src="https://instagram.fbel10-1.fna.fbcdn.net/v/t51.2885-19/525781313_18069955340118184_3013822007023453116_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fbel10-1.fna.fbcdn.net&_nc_cat=104&_nc_oc=Q6cZ2QEo_wGtXJJvmSlZOaOGDJsjR__iqRr21DH8XkYNFwGa2j1Ynn_GD1SR5vs966PW0KQ&_nc_ohc=7jvGF4nvCMsQ7kNvwElDsmc&_nc_gid=BhQLg5blS1hu_htMfDrhyA&edm=ALGbJPMBAAAA&ccb=7-5&oh=00_AfbNQJZ3P41cdBeWq7Lnzb4HNlyUvA8nX1SWlmIrM6OPog&oe=68CF8FB1&_nc_sid=7d3ac5"
+            alt="Foto de Perfil"
+            width={120}
+            height={120}
+            className="rounded-full border-4 border-gray-800/50 shadow-lg md:w-[150px] md:h-[150px]"
+          />
+        </div>
+      </div>
+      <div className="mt-20 flex flex-col items-center text-center">
         <h1 className="mt-4 text-2xl sm:text-3xl font-bold">Lohan Santos</h1>
         <p className="text-base sm:text-lg text-gray-400">@loohansb</p>
       </div>
@@ -197,7 +209,7 @@ export default function Page() {
       </div>
       <audio ref={audioRef} autoPlay loop>
         <source
-          src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o/copyright-free-rain-sounds-331497.mp3?alt=media&token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27"
+          src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o%2Fcopyright-free-rain-sounds-331497.mp3?alt=media&amp;token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27"
           type="audio/mpeg"
         />
         Seu navegador não suporta o elemento de áudio.
@@ -215,4 +227,5 @@ export default function Page() {
       </button>
     </main>
   );
-}
+
+    
