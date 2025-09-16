@@ -134,7 +134,7 @@ export default function Page() {
           </CollapsibleTrigger>
           <CollapsibleContent
             ref={projectsContentRef}
-            className="space-y-2 pt-2 animate-accordion-down"
+            className="space-y-2 pt-2"
           >
             <a
               href="https://gerenteinteligente.com/"
@@ -213,7 +213,7 @@ export default function Page() {
                   </div>
                 </button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md bg-gray-900 border-gray-700 text-white">
+              <DialogContent className="sm:max-w-md bg-gray-900/80 backdrop-blur-md border-gray-700/50 text-white">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
                     <FaDiscord />
@@ -228,13 +228,13 @@ export default function Page() {
                     id="discord-username"
                     readOnly
                     defaultValue={link.url}
-                    className="flex-1 bg-gray-800 border-gray-700"
+                    className="flex-1 bg-gray-800/80 border-gray-700"
                   />
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={() => copyToClipboard(link.url)}
-                    className="bg-gray-800 border-gray-700 hover:bg-gray-700"
+                    className="bg-gray-800/80 border-gray-700 hover:bg-gray-700"
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
