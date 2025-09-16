@@ -8,6 +8,7 @@ import {
   VolumeX,
   ChevronDown,
   Coins,
+  Brain,
 } from 'lucide-react';
 import { AiOutlineTikTok } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa6';
@@ -117,7 +118,7 @@ export default function Page() {
               </button>
             </a>
             <a
-              href="#"
+              href="https://gerenteinteligente.online/"
               target="_blank"
               rel="noopener noreferrer"
               className="group block"
@@ -126,7 +127,8 @@ export default function Page() {
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
                 <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
                 <div className="relative z-10 flex items-center justify-center gap-3">
-                  Projeto 2
+                  <Brain className="h-6 w-6" />
+                  Gerente Inteligente IA
                 </div>
               </button>
             </a>
