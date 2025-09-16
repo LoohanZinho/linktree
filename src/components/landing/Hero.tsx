@@ -15,16 +15,16 @@ export function Hero() {
             <span className="font-bold">@maikonkraemer</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            今日、あなたの場所を<span className="text-primary">KRAKENCLASS</span>で確保できます
+            HOJE VOCÊ PODE GARANTIR SUA VAGA NO <span className="text-primary">KRAKENCLASS</span>
           </h1>
           <p className="text-lg text-gray-300 mb-2">
-            ゼロから独自のデジタル製品を作成および販売し、<span className="font-bold text-white">月に4,000〜10,000レアル</span>を稼ぐための完全なメソッド（顔出しなし）。
+            O método completo para você criar e vender seu próprio produto digital do zero e faturar de <span className="font-bold text-white">4 a 10 mil reais por mês</span> (sem aparecer).
           </p>
           <p className="text-gray-400 mb-8">
-            たとえあなたが完全な初心者で、デジタルマーケティングについて何も知らず、投資するお金がほとんどなくても。あなたが必要とするすべてがここにあります。
+            Mesmo que você seja um completo iniciante, não saiba nada sobre marketing digital e tenha pouco dinheiro para investir. Tudo o que você precisa está aqui.
           </p>
           <Button size="lg" className="bg-primary text-black font-bold text-lg w-full md:w-auto hover:bg-primary/90 transition-transform transform hover:scale-105 shadow-lg shadow-primary/30 hover:shadow-primary/40">
-            参加したい
+            QUERO APRENDER
           </Button>
         </div>
         <div className="relative h-auto z-10">

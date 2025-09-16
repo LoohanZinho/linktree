@@ -9,26 +9,26 @@ export function Stories() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold mb-4">
-              今日、彼らはKrakenClassがどのように役立ったかについての証言の後に生きています
+              Hoje eles vivem de internet depois do que o KrakenClass fez por eles
             </h2>
-            <p>私たちの生徒たちは人生を変え、信じられないほどの結果を達成しています。彼らがソーシャルメディアでKrakenClassとの旅について共有していることをご覧ください。</p>
+            <p>Nossos alunos estão transformando suas vidas e alcançando resultados incríveis. Veja o que eles estão compartilhando nas redes sociais sobre sua jornada com o KrakenClass.</p>
           </div>
           <div className="relative h-[500px]">
             <Carousel opts={{ loop: true }}>
               <CarouselContent>
                 <CarouselItem>
                   <div className="p-1">
-                    <Image src="https://picsum.photos/seed/community/300/600" alt="App Screenshot 1" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="social feed" />
+                    <Image src="https://picsum.photos/seed/community/300/600" alt="Depoimento 1" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="social feed" />
                   </div>
                 </CarouselItem>
                 <CarouselItem>
                   <div className="p-1">
-                    <Image src="https://picsum.photos/seed/profits/300/600" alt="App Screenshot 2" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="financial chart" />
+                    <Image src="https://picsum.photos/seed/profits/300/600" alt="Depoimento 2" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="financial chart" />
                   </div>
                 </CarouselItem>
                 <CarouselItem>
                   <div className="p-1">
-                    <Image src="https://picsum.photos/seed/testimonial/300/600" alt="App Screenshot 3" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="user testimonial" />
+                    <Image src="https://picsum.photos/seed/testimonial/300/600" alt="Depoimento 3" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="user testimonial" />
                   </div>
                 </CarouselItem>
               </CarouselContent>

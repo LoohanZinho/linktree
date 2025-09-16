@@ -18,9 +18,9 @@ export function About() {
           <div className="md:col-span-2">
             <h2 className="text-3xl font-bold text-white mb-4">MAIKON KRAEMER</h2>
             <div className="text-gray-400 space-y-4">
-                <p>Maikon Kraemerはデジタルマーケティングとオンライン販売の専門家です。2018年にキャリアをスタートさせ、以来、インターネットで7桁の収益を上げてきました。</p>
-                <p>彼は784人以上の学生が自分のデジタルビジネスを立ち上げ、夢の経済的自由を達成するのを支援してきました。</p>
-                <p>彼の使命は明確です：デジタル起業家精神を通じてできるだけ多くの人々が人生を変えるのを助け、顔を出さなくてもインターネットで製品を作成して販売するための正確な道を示すことです。</p>
+                <p>Maikon Kraemer é especialista em marketing digital e vendas online. Começou sua jornada em 2018 e, desde então, já faturou múltiplos 7 dígitos na internet.</p>
+                <p>Ele já ajudou mais de 784 alunos a começarem seus próprios negócios digitais e alcançarem a tão sonhada liberdade financeira.</p>
+                <p>Sua missão é clara: ajudar o maior número de pessoas a transformar de vida através do empreendedorismo digital, mostrando o caminho exato para criar e vender produtos na internet sem precisar aparecer.</p>
             </div>
           </div>
         </div>
