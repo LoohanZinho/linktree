@@ -34,11 +34,11 @@ export default function Page() {
   return (
     <main className="relative flex min-h-screen flex-col items-center p-4 text-white">
       <Image
-        src="https://picsum.photos/seed/background/1920/1080"
+        src="https://i.imgur.com/W0m41wl.jpeg"
         alt="Fundo neutro"
         fill
         className="object-cover -z-10 brightness-50"
-        data-ai-hint="neutral background"
+        data-ai-hint="abstract background"
       />
       <div className="mt-12 flex flex-col items-center text-center">
         <Image
