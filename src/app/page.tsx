@@ -73,7 +73,7 @@ export default function Page() {
                 className={`absolute inset-0 z-0 bg-gradient-to-br ${link.glow} opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
               ></div>
               <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
-              <div className={`absolute inset-0 z-0 bg-gradient-to-br ${link.className} `}></div>
+              <div className={`absolute inset-0 z-0 bg-gradient-to-br ${link.className} opacity-80`}></div>
               <div className="relative z-10 flex items-center justify-center gap-3">
                 {link.icon}
                 {link.name}
