@@ -4,7 +4,10 @@ import { Instagram } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative bg-black text-white py-20">
+    <section className="relative bg-black text-white py-20 overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full bg-black/50 z-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/30 rounded-full blur-3xl" />
+      </div>
       <div className="container mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
         <div className="z-10">
           <div className="flex items-center gap-2 text-primary mb-4">
@@ -34,10 +37,10 @@ export function Hero() {
             alt="Maikon Kraemer"
             width={600}
             height={800}
-            className="rounded-lg object-cover w-full h-full"
+            className="rounded-lg object-cover w-full h-full shadow-2xl shadow-primary/20"
             data-ai-hint="man smiling"
           />
-           <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-4 rounded-lg text-center">
+           <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md p-4 rounded-lg text-center">
                 <p className="text-4xl font-bold text-primary">784</p>
                 <p className="text-sm text-white">Alunos</p>
             </div>
