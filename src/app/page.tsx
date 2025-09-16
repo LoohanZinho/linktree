@@ -1,9 +1,15 @@
+'use client';
+
 import Image from 'next/image';
-import { Instagram, Youtube } from 'lucide-react';
-import { AiOutlineTikTok } from "react-icons/ai";
-import { FaDiscord } from "react-icons/fa6";
+import { Instagram, Youtube, Volume2, VolumeX } from 'lucide-react';
+import { AiOutlineTikTok } from 'react-icons/ai';
+import { FaDiscord } from 'react-icons/fa6';
+import { useState, useRef } from 'react';
 
 export default function Page() {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   const socialLinks = [
     {
       name: 'Instagram',
@@ -34,6 +40,17 @@ export default function Page() {
       glow: 'from-gray-500/50 to-gray-800/50',
     },
   ];
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
 
   return (
     <main className="relative flex min-h-screen flex-col items-center p-4 sm:p-6 md:p-8 text-white">
@@ -82,10 +99,17 @@ export default function Page() {
           </a>
         ))}
       </div>
-      <audio autoPlay loop controls className="absolute bottom-4 right-4 w-64 opacity-50 hover:opacity-100 transition-opacity duration-300">
+      <audio ref={audioRef} autoPlay loop>
         <source src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o/copyright-free-rain-sounds-331497.mp3?alt=media&token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27" type="audio/mpeg" />
         Seu navegador não suporta o elemento de áudio.
       </audio>
+      <button 
+        onClick={togglePlay} 
+        className="absolute bottom-4 right-4 text-white p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors duration-300"
+        aria-label="Toggle sound"
+      >
+        {isPlaying ? <Volume2 className="h-6 w-6" /> : <VolumeX className="h-6 w-6" />}
+      </button>
     </main>
   );
 }
