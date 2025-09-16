@@ -1,10 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { Instagram, Youtube, Volume2, VolumeX } from 'lucide-react';
+import { Instagram, Youtube, Volume2, VolumeX, ChevronDown } from 'lucide-react';
 import { AiOutlineTikTok } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa6';
 import { useState, useRef } from 'react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
 export default function Page() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -75,6 +80,50 @@ export default function Page() {
       </div>
 
       <div className="mt-8 w-full max-w-sm space-y-4">
+        <Collapsible className="w-full">
+          <CollapsibleTrigger asChild>
+            <button className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
+              <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
+              <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+              <div className="absolute inset-0 z-0 bg-gradient-to-br opacity-80"></div>
+              <div className="relative z-10 flex items-center justify-center gap-3">
+                Meus projetos
+                <ChevronDown className="h-5 w-5 transition-transform duration-300 group-data-[state=open]:rotate-180" />
+              </div>
+            </button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2 pt-2">
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
+                <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
+                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+                <div className="relative z-10 flex items-center justify-center gap-3">
+                  Projeto 1
+                </div>
+              </button>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block"
+            >
+              <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
+                <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
+                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+                <div className="relative z-10 flex items-center justify-center gap-3">
+                  Projeto 2
+                </div>
+              </button>
+            </a>
+          </CollapsibleContent>
+        </Collapsible>
+
         {socialLinks.map((link) => (
           <a
             key={link.name}
