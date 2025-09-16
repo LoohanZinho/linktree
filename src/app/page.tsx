@@ -82,6 +82,10 @@ export default function Page() {
           </a>
         ))}
       </div>
+      <audio autoPlay loop controls className="absolute bottom-4 right-4 w-64 opacity-50 hover:opacity-100 transition-opacity duration-300">
+        <source src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o/copyright-free-rain-sounds-331497.mp3?alt=media&token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27" type="audio/mpeg" />
+        Seu navegador não suporta o elemento de áudio.
+      </audio>
     </main>
   );
 }
