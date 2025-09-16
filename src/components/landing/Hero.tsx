@@ -33,12 +33,12 @@ export function Hero() {
         </div>
         <div className="relative h-96 md:h-auto">
           <Image
-            src="https://picsum.photos/seed/hero/600/800"
+            src="https://picsum.photos/seed/businessman/600/800"
             alt="Maikon Kraemer"
             width={600}
             height={800}
             className="rounded-lg object-cover w-full h-full shadow-2xl shadow-primary/20"
-            data-ai-hint="man smiling"
+            data-ai-hint="man tech"
           />
            <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md p-4 rounded-lg text-center">
                 <p className="text-4xl font-bold text-primary">784</p>

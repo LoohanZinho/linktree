@@ -18,17 +18,17 @@ export function Stories() {
               <CarouselContent>
                 <CarouselItem>
                   <div className="p-1">
-                    <Image src="https://picsum.photos/seed/phone1/300/600" alt="App Screenshot 1" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="app screen social" />
+                    <Image src="https://picsum.photos/seed/community/300/600" alt="App Screenshot 1" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="social feed" />
                   </div>
                 </CarouselItem>
                 <CarouselItem>
                   <div className="p-1">
-                    <Image src="https://picsum.photos/seed/phone2/300/600" alt="App Screenshot 2" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="app screen analytics" />
+                    <Image src="https://picsum.photos/seed/profits/300/600" alt="App Screenshot 2" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="financial chart" />
                   </div>
                 </CarouselItem>
                 <CarouselItem>
                   <div className="p-1">
-                    <Image src="https://picsum.photos/seed/phone3/300/600" alt="App Screenshot 3" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="app screen chat" />
+                    <Image src="https://picsum.photos/seed/testimonial/300/600" alt="App Screenshot 3" width={300} height={600} className="rounded-2xl mx-auto object-contain shadow-2xl" data-ai-hint="user testimonial" />
                   </div>
                 </CarouselItem>
               </CarouselContent>

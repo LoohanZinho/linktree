@@ -16,12 +16,12 @@ export function AppPreview() {
         </p>
         <div className="bg-gray-900/50 border border-gray-800 p-4 md:p-8 rounded-lg max-w-5xl mx-auto backdrop-blur-sm transition-all duration-300 hover:shadow-primary/20">
             <Image 
-                src="https://picsum.photos/seed/tablet/1024/768"
+                src="https://picsum.photos/seed/dashboard/1024/768"
                 alt="KrakenClass modules on a tablet"
                 width={1024}
                 height={768}
                 className="rounded-md shadow-2xl"
-                data-ai-hint="tablet screen course"
+                data-ai-hint="dashboard analytics"
             />
             <div className="flex flex-col md:flex-row justify-between items-center mt-8 text-left p-4 gap-4 bg-gray-900 rounded-lg">
                 <div>

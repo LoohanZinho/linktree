@@ -7,12 +7,12 @@ export function About() {
         <div className="bg-gray-900 rounded-lg p-8 grid md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-1">
             <Image
-              src="https://picsum.photos/seed/about/400/400"
+              src="https://picsum.photos/seed/teacher/400/400"
               alt="Maikon Kraemer"
               width={400}
               height={400}
               className="rounded-lg object-cover w-full"
-              data-ai-hint="man portrait"
+              data-ai-hint="man teacher"
             />
           </div>
           <div className="md:col-span-2">
