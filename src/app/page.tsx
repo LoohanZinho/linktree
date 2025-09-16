@@ -16,7 +16,7 @@ export default function Page() {
       name: 'TikTok',
       url: 'https://www.tiktok.com/@loohansb',
       icon: <AiOutlineTikTok className="h-6 w-6" />,
-      className: 'bg-black',
+      className: '',
       glow: 'from-gray-500/50 to-gray-800/50',
     },
     {
