@@ -1,37 +1,9 @@
-import { Hero } from "@/components/landing/Hero";
-import { Features } from "@/components/landing/Features";
-import { Checklist } from "@/components/landing/Checklist";
-import { Cta } from "@/components/landing/Cta";
-import { Stories } from "@/components/landing/Stories";
-import { About } from "@/components/landing/About";
-import { Testimonials } from "@/components/landing/Testimonials";
-import { MoreFeatures } from "@/components/landing/MoreFeatures";
-import { AppPreview } from "@/components/landing/AppPreview";
-import { Guarantee } from "@/components/landing/Guarantee";
-import { FinalCta } from "@/components/landing/FinalCta";
-import { Bonuses } from "@/components/landing/Bonuses";
-import { Faq } from "@/components/landing/Faq";
-import { Footer } from "@/components/landing/Footer";
-import { DynamicIsland } from "@/components/landing/DynamicIsland";
 
 export default function Home() {
   return (
-    <div className="bg-black text-white">
-      <Hero />
-      <Features />
-      <Checklist />
-      <Cta />
-      <Stories />
-      <About />
-      <Testimonials />
-      <MoreFeatures />
-      <AppPreview />
-      <Bonuses />
-      <Guarantee />
-      <Faq />
-      <FinalCta />
-      <Footer />
-      <DynamicIsland />
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <h1 className="text-4xl font-bold">Vamos começar a construir algo novo!</h1>
+      <p className="mt-4 text-lg text-muted-foreground">O projeto está limpo. O que você gostaria de criar agora?</p>
+    </main>
   );
 }

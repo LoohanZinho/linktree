@@ -6,8 +6,8 @@ import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'KrakenClass',
-  description: 'Aprenda a criar e vender produtos digitais.',
+  title: 'Meu Novo App',
+  description: 'Criado com Firebase Studio',
 };
 
 export default function RootLayout({
