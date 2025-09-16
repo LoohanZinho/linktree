@@ -9,13 +9,13 @@ export default function Page() {
       name: 'Instagram',
       url: 'https://www.instagram.com/loohansb/',
       icon: <Instagram className="h-6 w-6" />,
-      className: 'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500',
+      className: 'bg-pink-500',
     },
     {
       name: 'TikTok',
       url: 'https://www.tiktok.com/@loohansb',
       icon: <AiOutlineTikTok className="h-6 w-6" />,
-      className: 'bg-gradient-to-r from-cyan-400 to-fuchsia-500',
+      className: 'bg-cyan-500',
     },
     {
       name: 'YouTube',
