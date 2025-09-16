@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { AiOutlineTikTok } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa6';
-import { useState, useRef } from 'react';
+import { useState, useRef, RefObject } from 'react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,6 +23,7 @@ import * as React from 'react';
 export default function Page() {
   const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const projectsContentRef = useRef<HTMLDivElement>(null);
 
   const socialLinks = [
     {
@@ -66,6 +67,17 @@ export default function Page() {
     }
   };
 
+  const handleProjectsOpen = (isOpen: boolean) => {
+    if (isOpen) {
+      setTimeout(() => {
+        projectsContentRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        });
+      }, 300);
+    }
+  };
+
   return (
     <main className="relative flex min-h-screen flex-col items-center p-4 sm:p-6 md:p-8 text-white">
       <Image
@@ -89,7 +101,7 @@ export default function Page() {
       </div>
 
       <div className="mt-8 w-full max-w-sm space-y-4">
-        <Collapsible className="w-full">
+        <Collapsible onOpenChange={handleProjectsOpen} className="w-full">
           <CollapsibleTrigger asChild>
             <button className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
               <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
@@ -101,7 +113,7 @@ export default function Page() {
               </div>
             </button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 pt-2">
+          <CollapsibleContent ref={projectsContentRef} className="space-y-2 pt-2">
             <a
               href="https://gerenteinteligente.com/"
               target="_blank"
