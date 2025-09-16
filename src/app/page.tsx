@@ -111,13 +111,13 @@ export default function Page() {
           </CollapsibleTrigger>
           <CollapsibleContent
             ref={projectsContentRef}
-            className="space-y-2 pt-2"
+            className="space-y-2 pt-2 overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up"
           >
             <a
               href="https://gerenteinteligente.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group block"
+              className="group block animate-fade-in-down"
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
@@ -132,7 +132,7 @@ export default function Page() {
               href="https://gerenteinteligente.online/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group block"
+              className="group block animate-fade-in-down animation-delay-200"
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
