@@ -183,7 +183,9 @@ export default function Page() {
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
-                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md rounded-2xl border-2 border-transparent bg-clip-padding" style={{
+                  borderImage: 'linear-gradient(to right, #fde047, #eab308) 1',
+                }}></div>
                 <div className="relative z-10 flex items-center justify-center gap-3">
                   <DollarSign className="h-6 w-6" />
                   Lucrando com Influenciadores
