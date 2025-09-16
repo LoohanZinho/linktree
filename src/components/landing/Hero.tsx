@@ -6,11 +6,11 @@ export function Hero() {
   return (
     <section className="relative bg-black text-white py-20 overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full bg-black/50 z-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/30 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/30 rounded-full blur-3xl animate-pulse" />
       </div>
       <div className="container mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
         <div className="z-10">
-          <div className="flex items-center gap-2 text-primary mb-4">
+          <div className="flex items-center gap-2 text-primary mb-4 drop-shadow-[0_0_8px_hsl(var(--primary))]">
             <Instagram />
             <span className="font-bold">@maikonkraemer</span>
           </div>
@@ -27,7 +27,7 @@ export function Hero() {
           <p className="text-gray-400 mb-8">
             Mesmo que você seja um completo iniciante, não entenda nada de marketing digital e tenha pouco dinheiro para investir. Tudo o que você precisa está aqui dentro.
           </p>
-          <Button size="lg" className="bg-primary text-black font-bold text-lg w-full md:w-auto hover:bg-primary/90">
+          <Button size="lg" className="bg-primary text-black font-bold text-lg w-full md:w-auto hover:bg-primary/90 transition-transform transform hover:scale-105">
             QUERO ENTRAR
           </Button>
         </div>
