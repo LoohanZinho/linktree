@@ -1,22 +1,6 @@
 import Image from 'next/image';
 import { Instagram, Youtube } from 'lucide-react';
-
-const TikTokIcon = () => (
-  <svg
-    className="h-6 w-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M16.25 5.75h-3.5a3.5 3.5 0 00-3.5 3.5v9.5a2 2 0 104 0v-5.5a1.5 1.5 0 113 0v5.5a4.5 4.5 0 109 0v-9.5a3.5 3.5 0 00-3.5-3.5z"
-    ></path>
-  </svg>
-);
+import { AiOutlineTikTok } from "react-icons/ai";
 
 const DiscordIcon = () => (
   <svg
@@ -40,7 +24,7 @@ export default function Page() {
     {
       name: 'TikTok',
       url: 'https://www.tiktok.com/@loohansb',
-      icon: <TikTokIcon />,
+      icon: <AiOutlineTikTok className="h-6 w-6" />,
       className: 'bg-gradient-to-r from-cyan-400 to-fuchsia-500',
     },
     {
