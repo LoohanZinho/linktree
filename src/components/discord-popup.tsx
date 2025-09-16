@@ -36,13 +36,13 @@ export function DiscordPopup({ username, children }: DiscordPopupProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-gray-900/80 backdrop-blur-md border-gray-700/50 text-white">
+      <DialogContent className="sm:max-w-md bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FaDiscord />
             Discord
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-gray-400">
             Copie meu nome de usuário para me adicionar.
           </DialogDescription>
         </DialogHeader>
@@ -51,13 +51,13 @@ export function DiscordPopup({ username, children }: DiscordPopupProps) {
             id="discord-username"
             readOnly
             defaultValue={username}
-            className="flex-1 bg-gray-800/80 border-gray-700"
+            className="flex-1 bg-black/20 border-white/10"
           />
           <Button
             variant="outline"
             size="icon"
             onClick={() => copyToClipboard(username)}
-            className="bg-gray-800/80 border-gray-700 hover:bg-gray-700"
+            className="bg-black/20 border-white/10 hover:bg-black/40"
           >
             <Copy className="h-4 w-4" />
           </Button>
