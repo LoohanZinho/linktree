@@ -1,7 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { Instagram, Youtube, Volume2, VolumeX, ChevronDown } from 'lucide-react';
+import {
+  Instagram,
+  Youtube,
+  Volume2,
+  VolumeX,
+  ChevronDown,
+  Coins,
+} from 'lucide-react';
 import { AiOutlineTikTok } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa6';
 import { useState, useRef } from 'react';
@@ -10,6 +17,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import * as React from 'react';
 
 export default function Page() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -92,9 +100,9 @@ export default function Page() {
               </div>
             </button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 pt-2">
+          <CollapsibleContent className="space-y-2 pt-2 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
             <a
-              href="#"
+              href="https://gerenteinteligente.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="group block"
@@ -103,7 +111,8 @@ export default function Page() {
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
                 <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
                 <div className="relative z-10 flex items-center justify-center gap-3">
-                  Projeto 1
+                  <Coins className="h-6 w-6" />
+                  Gerente Inteligente FInanceiro
                 </div>
               </button>
             </a>
@@ -149,15 +158,22 @@ export default function Page() {
         ))}
       </div>
       <audio ref={audioRef} autoPlay loop>
-        <source src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o/copyright-free-rain-sounds-331497.mp3?alt=media&token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27" type="audio/mpeg" />
+        <source
+          src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o/copyright-free-rain-sounds-331497.mp3?alt=media&token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27"
+          type="audio/mpeg"
+        />
         Seu navegador não suporta o elemento de áudio.
       </audio>
-      <button 
-        onClick={togglePlay} 
+      <button
+        onClick={togglePlay}
         className="absolute bottom-4 right-4 text-white p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors duration-300"
         aria-label="Toggle sound"
       >
-        {isPlaying ? <Volume2 className="h-6 w-6" /> : <VolumeX className="h-6 w-6" />}
+        {isPlaying ? (
+          <Volume2 className="h-6 w-6" />
+        ) : (
+          <VolumeX className="h-6 w-6" />
+        )}
       </button>
     </main>
   );
