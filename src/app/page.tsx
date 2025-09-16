@@ -11,6 +11,7 @@ import {
   Brain,
   UsersRound,
   DollarSign,
+  Building,
 } from 'lucide-react';
 import { AiOutlineTikTok } from 'react-icons/ai';
 import { FaDiscord, FaWhatsapp } from 'react-icons/fa6';
@@ -202,6 +203,22 @@ export default function Page() {
                 </div>
               </button>
             </a>
+            <a
+              href="https://depositoaguasbrancas.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block animate-fade-in-down"
+              style={{ animationDelay: '800ms' }}
+            >
+              <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
+                <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
+                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+                <div className="relative z-10 flex items-center justify-center gap-3">
+                  <Building className="h-6 w-6" />
+                  Depósito Águas Brancas
+                </div>
+              </button>
+            </a>
           </CollapsibleContent>
         </Collapsible>
         
@@ -273,3 +290,4 @@ export default function Page() {
       </button>
     </main>
   );
+}

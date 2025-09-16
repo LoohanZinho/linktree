@@ -119,6 +119,7 @@ export default {
         '200': '200ms',
         '400': '400ms',
         '600': '600ms',
+        '800': '800ms',
       }
     },
   },
@@ -134,6 +135,9 @@ export default {
         },
         '.animation-delay-600': {
           'animation-delay': '600ms',
+        },
+        '.animation-delay-800': {
+          'animation-delay': '800ms',
         },
       });
     },
