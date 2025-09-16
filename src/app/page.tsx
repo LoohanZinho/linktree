@@ -9,36 +9,41 @@ export default function Page() {
       name: 'Instagram',
       url: 'https://www.instagram.com/loohansb/',
       icon: <Instagram className="h-6 w-6" />,
-      className: 'bg-[radial-gradient(circle_at_30%_107%,#FBD83F_0%,#FBD83F_5%,#F83640_45%,#E1306C_60%,#C13584_80%,#833AB4_100%)]',
+      className: 'from-[#C14D91] via-[#C94E8D] to-[#FBD83F]',
+      glow: 'from-[#C14D91]/50 via-[#C94E8D]/50 to-[#FBD83F]/50',
     },
     {
       name: 'TikTok',
       url: 'https://www.tiktok.com/@loohansb',
       icon: <AiOutlineTikTok className="h-6 w-6" />,
       className: 'bg-black',
+      glow: 'from-gray-500/50 to-gray-800/50',
     },
     {
       name: 'YouTube',
       url: 'https://www.youtube.com/@LzOfSeven',
       icon: <Youtube className="h-6 w-6" />,
       className: 'bg-red-600',
+      glow: 'from-red-500/50 to-red-700/50',
     },
     {
       name: 'Discord',
       url: 'https://discordapp.com/users/lzofseven',
       icon: <FaDiscord className="h-6 w-6" />,
       className: 'bg-indigo-600',
+      glow: 'from-indigo-500/50 to-indigo-700/50',
     },
   ];
 
   return (
     <main className="relative flex min-h-screen flex-col items-center p-4 sm:p-6 md:p-8 text-white">
       <Image
-        src="https://i.imgur.com/W0m41wl.jpeg"
-        alt="Fundo neutro"
+        src="https://i.imgur.com/pjSQoR5.gif"
+        alt="Fundo animado"
         fill
         className="object-cover -z-10 brightness-50"
-        data-ai-hint="abstract background"
+        data-ai-hint="animated background"
+        unoptimized
       />
       <div className="mt-8 sm:mt-12 flex flex-col items-center text-center">
         <Image
@@ -65,10 +70,10 @@ export default function Page() {
               className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
             >
               <div
-                className={`absolute inset-0 z-0 ${link.className} opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-300`}
+                className={`absolute inset-0 z-0 bg-gradient-to-br ${link.glow} opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
               ></div>
               <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
-              <div className={`absolute inset-0 z-0 ${link.className} rounded-2xl`}></div>
+              <div className={`absolute inset-0 z-0 bg-gradient-to-br ${link.className} `}></div>
               <div className="relative z-10 flex items-center justify-center gap-3">
                 {link.icon}
                 {link.name}
