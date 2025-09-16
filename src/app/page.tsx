@@ -9,7 +9,7 @@ export default function Page() {
       name: 'Instagram',
       url: 'https://www.instagram.com/loohansb/',
       icon: <Instagram className="h-6 w-6" />,
-      className: 'bg-pink-500',
+      className: 'bg-[radial-gradient(circle_at_30%_107%,#FBD83F_0%,#FBD83F_5%,#F83640_45%,#E1306C_60%,#C13584_80%,#833AB4_100%)]',
     },
     {
       name: 'TikTok',
@@ -68,6 +68,7 @@ export default function Page() {
                 className={`absolute inset-0 z-0 ${link.className} opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-300`}
               ></div>
               <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+              <div className={`absolute inset-0 z-0 ${link.className} rounded-2xl`}></div>
               <div className="relative z-10 flex items-center justify-center gap-3">
                 {link.icon}
                 {link.name}
