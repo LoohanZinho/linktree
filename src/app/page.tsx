@@ -112,7 +112,7 @@ export default function Page() {
       <div className="mt-8 w-full max-w-sm space-y-4">
         <Collapsible onOpenChange={handleProjectsOpen} className="w-full">
           <CollapsibleTrigger asChild>
-            <button className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
+            <button className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
               <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
               <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
               <div className="absolute inset-0 z-0 bg-gradient-to-br opacity-80"></div>
@@ -132,7 +132,7 @@ export default function Page() {
               rel="noopener noreferrer"
               className="group block animate-fade-in-down"
             >
-              <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
+              <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
                 <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
                 <div className="relative z-10 flex items-center justify-center gap-3">
@@ -147,7 +147,7 @@ export default function Page() {
               rel="noopener noreferrer"
               className="group block animate-fade-in-down animation-delay-200"
             >
-              <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
+              <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
                 <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
                 <div className="relative z-10 flex items-center justify-center gap-3">
@@ -171,7 +171,7 @@ export default function Page() {
               className="group block"
             >
               <button
-                className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
+                className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
               >
                 <div
                   className={`absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
@@ -189,7 +189,7 @@ export default function Page() {
           ) : (
             <DiscordPopup key={link.name} username={link.url}>
               <button
-                className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
+                className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
               >
                 <div
                   className={`absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
@@ -227,5 +227,7 @@ export default function Page() {
       </button>
     </main>
   );
+
+    
 
     
