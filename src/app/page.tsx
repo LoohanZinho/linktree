@@ -9,8 +9,8 @@ export default function Page() {
       name: 'Instagram',
       url: 'https://www.instagram.com/loohansb/',
       icon: <Instagram className="h-6 w-6" />,
-      className: 'from-[#C14D91] via-[#C94E8D] to-[#FBD83F]',
-      glow: 'from-[#C14D91]/50 via-[#C94E8D]/50 to-[#FBD83F]/50',
+      className: '',
+      glow: 'from-gray-500/50 to-gray-800/50',
     },
     {
       name: 'TikTok',
