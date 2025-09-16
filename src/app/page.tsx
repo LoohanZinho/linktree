@@ -19,6 +19,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { DiscordPopup } from '@/components/discord-popup';
+import { Separator } from '@/components/ui/separator';
 
 export default function Page() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -145,6 +146,8 @@ export default function Page() {
             </a>
           </CollapsibleContent>
         </Collapsible>
+        
+        <Separator className="bg-white/10" />
 
         {socialLinks.map((link) =>
           link.isExternal ? (
