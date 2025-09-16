@@ -9,36 +9,21 @@ import {
   ChevronDown,
   Coins,
   Brain,
-  Copy,
 } from 'lucide-react';
 import { AiOutlineTikTok } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa6';
-import { useState, useRef, RefObject } from 'react';
+import { useState, useRef } from 'react';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import * as React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { Input } from '@/components/ui/input';
+import { DiscordPopup } from '@/components/discord-popup';
 
 export default function Page() {
   const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const projectsContentRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
 
   const socialLinks = [
     {
@@ -87,14 +72,6 @@ export default function Page() {
         });
       }, 300);
     }
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: 'Copiado!',
-      description: 'Nome de usuário copiado para a área de transferência.',
-    });
   };
 
   return (
@@ -195,64 +172,23 @@ export default function Page() {
               </button>
             </a>
           ) : (
-            <Dialog key={link.name}>
-              <DialogTrigger asChild>
-                <button
-                  className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
-                >
-                  <div
-                    className={`absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
-                  ></div>
-                  <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
-                  <div
-                    className={`absolute inset-0 z-0 bg-gradient-to-br opacity-80`}
-                  ></div>
-                  <div className="relative z-10 flex items-center justify-center gap-3">
-                    {link.icon}
-                    {link.name}
-                  </div>
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md bg-gray-900/80 backdrop-blur-md border-gray-700/50 text-white">
-                <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2">
-                    <FaDiscord />
-                    Discord
-                  </DialogTitle>
-                  <DialogDescription>
-                    Copie meu nome de usuário para me adicionar.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="flex items-center space-x-2">
-                  <Input
-                    id="discord-username"
-                    readOnly
-                    defaultValue={link.url}
-                    className="flex-1 bg-gray-800/80 border-gray-700"
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => copyToClipboard(link.url)}
-                    className="bg-gray-800/80 border-gray-700 hover:bg-gray-700"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
+            <DiscordPopup key={link.name} username={link.url}>
+              <button
+                className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
+              >
+                <div
+                  className={`absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
+                ></div>
+                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+                <div
+                  className={`absolute inset-0 z-0 bg-gradient-to-br opacity-80`}
+                ></div>
+                <div className="relative z-10 flex items-center justify-center gap-3">
+                  {link.icon}
+                  {link.name}
                 </div>
-                <DialogFooter className="sm:justify-start">
-                  <DialogClose asChild>
-                    <a
-                      href="https://discord.com/app"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-blue-400 hover:underline"
-                    >
-                      Abrir no Discord
-                    </a>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+              </button>
+            </DiscordPopup>
           )
         )}
       </div>
