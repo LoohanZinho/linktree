@@ -13,7 +13,7 @@ import {
   DollarSign,
 } from 'lucide-react';
 import { AiOutlineTikTok } from 'react-icons/ai';
-import { FaDiscord } from 'react-icons/fa6';
+import { FaDiscord, FaWhatsapp } from 'react-icons/fa6';
 import { useState, useRef, useEffect } from 'react';
 import {
   Collapsible,
@@ -35,6 +35,12 @@ export default function Page() {
   }, []);
 
   const socialLinks = [
+    {
+      name: 'WhatsApp',
+      url: 'https://wa.me/91981588512',
+      icon: <FaWhatsapp className="h-6 w-6" />,
+      isExternal: true,
+    },
     {
       name: 'Instagram',
       url: 'https://www.instagram.com/loohansb/',
@@ -267,12 +273,3 @@ export default function Page() {
       </button>
     </main>
   );
-
-    
-
-    
-
-    
-    
-
-    
