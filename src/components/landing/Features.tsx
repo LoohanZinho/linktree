@@ -28,7 +28,7 @@ export function Features() {
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="bg-gray-900/50 border-gray-800 text-center backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10">
+            <Card key={index} className="bg-gray-900/50 border-gray-800 text-center backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2">
               <CardHeader>
                 <div className="flex justify-center mb-4">
                   <div className="p-4 bg-primary/10 rounded-full ring-4 ring-primary/20">

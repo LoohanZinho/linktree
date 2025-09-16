@@ -29,7 +29,7 @@ export function MoreFeatures() {
         <p className="text-gray-400 text-center mb-12">Você terá acesso a tudo isso</p>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="bg-gray-900 border-gray-800 text-center">
+            <Card key={index} className="bg-gray-900 border-gray-800 text-center transition-transform duration-300 hover:scale-105">
               <CardHeader>
                 <div className="flex justify-center mb-4">{feature.icon}</div>
                 <CardTitle className="text-white">{feature.title}</CardTitle>

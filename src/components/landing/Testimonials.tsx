@@ -17,7 +17,7 @@ export function Testimonials() {
         <p className="text-gray-400 mb-12">veja alguns resultados dos nossos alunos</p>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="flex flex-col items-center">
+            <div key={index} className="flex flex-col items-center transition-transform duration-300 hover:scale-110">
               <Image
                 src={testimonial.image}
                 alt={testimonial.name}

@@ -14,7 +14,7 @@ export function AppPreview() {
         <p className="text-gray-400 mb-12 max-w-2xl mx-auto">
             Meu método já foi validado por mais de 784 pessoas. Agora, quero ver VOCÊ faturando no digital.
         </p>
-        <div className="bg-gray-900/50 border border-gray-800 p-4 md:p-8 rounded-lg max-w-5xl mx-auto backdrop-blur-sm">
+        <div className="bg-gray-900/50 border border-gray-800 p-4 md:p-8 rounded-lg max-w-5xl mx-auto backdrop-blur-sm transition-all duration-300 hover:shadow-primary/20">
             <Image 
                 src="https://picsum.photos/seed/tablet/1024/768"
                 alt="KrakenClass modules on a tablet"
@@ -34,7 +34,7 @@ export function AppPreview() {
                     <p className="text-gray-400">ou R$ 297,00 à vista</p>
                 </div>
             </div>
-            <Button size="lg" className="bg-primary text-black font-bold text-lg w-full mt-4 hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
+            <Button size="lg" className="bg-primary text-black font-bold text-lg w-full mt-4 hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all transform hover:scale-105">
                 QUERO ENTRAR AGORA MESMO
             </Button>
         </div>

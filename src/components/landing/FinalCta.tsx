@@ -13,7 +13,7 @@ export function FinalCta() {
             <p>Clique no botão abaixo para garantir sua vaga com o desconto de lançamento e ter acesso a todos os bônus.</p>
             <p>Nos vemos do outro lado!</p>
         </div>
-        <Button size="lg" className="bg-primary text-black font-bold text-lg w-full md:w-auto hover:bg-primary/90">
+        <Button size="lg" className="bg-primary text-black font-bold text-lg w-full md:w-auto hover:bg-primary/90 transition-transform duration-300 hover:scale-105">
             QUERO ENTRAR AGORA MESMO
         </Button>
       </div>
