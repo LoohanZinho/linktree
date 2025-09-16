@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Coins,
   Brain,
+  Copy,
 } from 'lucide-react';
 import { AiOutlineTikTok } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa6';
@@ -19,40 +20,50 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import * as React from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
 
 export default function Page() {
   const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const projectsContentRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const socialLinks = [
     {
       name: 'Instagram',
       url: 'https://www.instagram.com/loohansb/',
       icon: <Instagram className="h-6 w-6" />,
-      className: '',
-      glow: 'from-gray-500/50 to-gray-800/50',
+      isExternal: true,
     },
     {
       name: 'TikTok',
       url: 'https://www.tiktok.com/@loohansb',
       icon: <AiOutlineTikTok className="h-6 w-6" />,
-      className: '',
-      glow: 'from-gray-500/50 to-gray-800/50',
+      isExternal: true,
     },
     {
       name: 'YouTube',
       url: 'https://www.youtube.com/@LzOfSeven',
       icon: <Youtube className="h-6 w-6" />,
-      className: '',
-      glow: 'from-gray-500/50 to-gray-800/50',
+      isExternal: true,
     },
     {
       name: 'Discord',
-      url: 'https://discordapp.com/users/lzofseven',
+      url: 'lzofseven',
       icon: <FaDiscord className="h-6 w-6" />,
-      className: '',
-      glow: 'from-gray-500/50 to-gray-800/50',
+      isExternal: false,
     },
   ];
 
@@ -76,6 +87,14 @@ export default function Page() {
         });
       }, 300);
     }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: 'Copiado!',
+      description: 'Nome de usuário copiado para a área de transferência.',
+    });
   };
 
   return (
@@ -113,7 +132,10 @@ export default function Page() {
               </div>
             </button>
           </CollapsibleTrigger>
-          <CollapsibleContent ref={projectsContentRef} className="space-y-2 pt-2">
+          <CollapsibleContent
+            ref={projectsContentRef}
+            className="space-y-2 pt-2 animate-accordion-down"
+          >
             <a
               href="https://gerenteinteligente.com/"
               target="_blank"
@@ -147,29 +169,92 @@ export default function Page() {
           </CollapsibleContent>
         </Collapsible>
 
-        {socialLinks.map((link) => (
-          <a
-            key={link.name}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block"
-          >
-            <button
-              className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
+        {socialLinks.map((link) =>
+          link.isExternal ? (
+            <a
+              key={link.name}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block"
             >
-              <div
-                className={`absolute inset-0 z-0 bg-gradient-to-br ${link.glow} opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
-              ></div>
-              <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
-              <div className={`absolute inset-0 z-0 bg-gradient-to-br ${link.className} opacity-80`}></div>
-              <div className="relative z-10 flex items-center justify-center gap-3">
-                {link.icon}
-                {link.name}
-              </div>
-            </button>
-          </a>
-        ))}
+              <button
+                className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
+              >
+                <div
+                  className={`absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
+                ></div>
+                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+                <div
+                  className={`absolute inset-0 z-0 bg-gradient-to-br opacity-80`}
+                ></div>
+                <div className="relative z-10 flex items-center justify-center gap-3">
+                  {link.icon}
+                  {link.name}
+                </div>
+              </button>
+            </a>
+          ) : (
+            <Dialog key={link.name}>
+              <DialogTrigger asChild>
+                <button
+                  className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
+                >
+                  <div
+                    className={`absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
+                  ></div>
+                  <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+                  <div
+                    className={`absolute inset-0 z-0 bg-gradient-to-br opacity-80`}
+                  ></div>
+                  <div className="relative z-10 flex items-center justify-center gap-3">
+                    {link.icon}
+                    {link.name}
+                  </div>
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md bg-gray-900 border-gray-700 text-white">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <FaDiscord />
+                    Discord
+                  </DialogTitle>
+                  <DialogDescription>
+                    Copie meu nome de usuário para me adicionar.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    id="discord-username"
+                    readOnly
+                    defaultValue={link.url}
+                    className="flex-1 bg-gray-800 border-gray-700"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => copyToClipboard(link.url)}
+                    className="bg-gray-800 border-gray-700 hover:bg-gray-700"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <DialogFooter className="sm:justify-start">
+                  <DialogClose asChild>
+                    <a
+                      href="https://discord.com/app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-400 hover:underline"
+                    >
+                      Abrir no Discord
+                    </a>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )
+        )}
       </div>
       <audio ref={audioRef} autoPlay loop>
         <source
