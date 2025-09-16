@@ -1,5 +1,22 @@
 import Image from 'next/image';
-import { Instagram, Youtube, Music } from 'lucide-react';
+import { Instagram, Youtube } from 'lucide-react';
+
+const TikTokIcon = () => (
+  <svg
+    className="h-6 w-6"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M16.25 5.75h-3.5a3.5 3.5 0 00-3.5 3.5v9.5a2 2 0 104 0v-5.5a1.5 1.5 0 113 0v5.5a4.5 4.5 0 109 0v-9.5a3.5 3.5 0 00-3.5-3.5z"
+    ></path>
+  </svg>
+);
 
 const DiscordIcon = () => (
   <svg
@@ -18,39 +35,43 @@ export default function Page() {
       name: 'Instagram',
       url: 'https://www.instagram.com/loohansb/',
       icon: <Instagram className="h-6 w-6" />,
+      className: 'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500',
     },
     {
       name: 'TikTok',
       url: 'https://www.tiktok.com/@loohansb',
-      icon: <Music className="h-6 w-6" />,
+      icon: <TikTokIcon />,
+      className: 'bg-gradient-to-r from-cyan-400 to-fuchsia-500',
     },
     {
       name: 'YouTube',
       url: 'https://www.youtube.com/@LzOfSeven',
       icon: <Youtube className="h-6 w-6" />,
+      className: 'bg-red-600',
     },
     {
       name: 'Discord',
       url: 'https://discordapp.com/users/lzofseven',
       icon: <DiscordIcon />,
+      className: 'bg-indigo-600',
     },
   ];
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-black p-4 text-white">
-      <div className="mt-8 flex flex-col items-center text-center">
+      <div className="mt-12 flex flex-col items-center text-center">
         <Image
           src="https://instagram.fbel10-1.fna.fbcdn.net/v/t51.2885-19/525781313_18069955340118184_3013822007023453116_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fbel10-1.fna.fbcdn.net&_nc_cat=104&_nc_oc=Q6cZ2QEo_wGtXJJvmSlZOaOGDJsjR__iqRr21DH8XkYNFwGa2j1Ynn_GD1SR5vs966PW0KQ&_nc_ohc=7jvGF4nvCMsQ7kNvwElDsmc&_nc_gid=BhQLg5blS1hu_htMfDrhyA&edm=ALGbJPMBAAAA&ccb=7-5&oh=00_AfbNQJZ3P41cdBeWq7Lnzb4HNlyUvA8nX1SWlmIrM6OPog&oe=68CF8FB1&_nc_sid=7d3ac5"
           alt="Foto de Perfil"
           width={150}
           height={150}
-          className="rounded-full border-4 border-gray-800 shadow-lg"
+          className="rounded-full border-4 border-gray-800/50 shadow-lg"
         />
-        <h1 className="mt-4 text-2xl font-bold">Lohan Santos</h1>
+        <h1 className="mt-4 text-3xl font-bold">Lohan Santos</h1>
         <p className="text-lg text-gray-400">@loohansb</p>
       </div>
 
-      <div className="mt-8 w-full max-w-md space-y-4">
+      <div className="mt-10 w-full max-w-sm space-y-5">
         {socialLinks.map((link) => (
           <a
             key={link.name}
@@ -59,9 +80,17 @@ export default function Page() {
             rel="noopener noreferrer"
             className="group block"
           >
-            <button className="flex w-full items-center justify-center gap-3 rounded-lg bg-gray-900 p-4 text-lg font-semibold text-white transition-transform duration-300 ease-in-out hover:scale-105 hover:bg-gray-800">
-              {link.icon}
-              {link.name}
+            <button
+              className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-4 text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
+            >
+              <div
+                className={`absolute inset-0 z-0 ${link.className} opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-300`}
+              ></div>
+              <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+              <div className="relative z-10 flex items-center justify-center gap-3">
+                {link.icon}
+                {link.name}
+              </div>
             </button>
           </a>
         ))}
