@@ -11,6 +11,7 @@ import { Guarantee } from "@/components/landing/Guarantee";
 import { FinalCta } from "@/components/landing/FinalCta";
 import { Bonuses } from "@/components/landing/Bonuses";
 import { Footer } from "@/components/landing/Footer";
+import { DynamicIsland } from "@/components/landing/DynamicIsland";
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
       <FinalCta />
       <Bonuses />
       <Footer />
+      <DynamicIsland />
     </div>
   );
 }
