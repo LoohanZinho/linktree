@@ -10,6 +10,7 @@ import { AppPreview } from "@/components/landing/AppPreview";
 import { Guarantee } from "@/components/landing/Guarantee";
 import { FinalCta } from "@/components/landing/FinalCta";
 import { Bonuses } from "@/components/landing/Bonuses";
+import { Faq } from "@/components/landing/Faq";
 import { Footer } from "@/components/landing/Footer";
 import { DynamicIsland } from "@/components/landing/DynamicIsland";
 
@@ -25,9 +26,10 @@ export default function Home() {
       <Testimonials />
       <MoreFeatures />
       <AppPreview />
-      <Guarantee />
-      <FinalCta />
       <Bonuses />
+      <Guarantee />
+      <Faq />
+      <FinalCta />
       <Footer />
       <DynamicIsland />
     </div>
