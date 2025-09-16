@@ -23,15 +23,15 @@ export default function Page() {
       name: 'YouTube',
       url: 'https://www.youtube.com/@LzOfSeven',
       icon: <Youtube className="h-6 w-6" />,
-      className: 'bg-red-600',
-      glow: 'from-red-500/50 to-red-700/50',
+      className: '',
+      glow: 'from-gray-500/50 to-gray-800/50',
     },
     {
       name: 'Discord',
       url: 'https://discordapp.com/users/lzofseven',
       icon: <FaDiscord className="h-6 w-6" />,
-      className: 'bg-indigo-600',
-      glow: 'from-indigo-500/50 to-indigo-700/50',
+      className: '',
+      glow: 'from-gray-500/50 to-gray-800/50',
     },
   ];
 
