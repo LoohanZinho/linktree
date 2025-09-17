@@ -172,27 +172,11 @@ export default function Page() {
               </button>
             </a>
             <a
-              href="https://muraldosinfluenciadores.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block animate-fade-in-down"
-              style={{ animationDelay: '400ms' }}
-            >
-              <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
-                <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
-                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
-                <div className="relative z-10 flex items-center justify-center gap-3">
-                  <UsersRound className="h-6 w-6" />
-                  Mural dos influenciadores
-                </div>
-              </button>
-            </a>
-            <a
               href="https://lucrandolci.netlify.app/"
               target="_blank"
               rel="noopener noreferrer"
               className="group block animate-fade-in-down"
-              style={{ animationDelay: '600ms' }}
+              style={{ animationDelay: '400ms' }}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
@@ -208,7 +192,7 @@ export default function Page() {
               target="_blank"
               rel="noopener noreferrer"
               className="group block animate-fade-in-down"
-              style={{ animationDelay: '800ms' }}
+              style={{ animationDelay: '600ms' }}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
