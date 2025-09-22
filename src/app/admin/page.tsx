@@ -165,7 +165,7 @@ export default function AdminDashboard() {
             <AreaChart data={data} accessibilityLayer>
               <defs>
                  {Object.keys(chartConfig).map((key) => {
-                    const color = chartConfig[key as key of typeof chartConfig]?.color;
+                    const color = chartConfig[key as keyof typeof chartConfig]?.color;
                     if (color) {
                        return (
                          <linearGradient key={key} id={`${chartId}-${key}`} x1="0" y1="0" x2="0" y2="1">
