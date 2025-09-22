@@ -13,6 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface DatePickerWithRangeProps extends React.HTMLAttributes<HTMLDivElement> {
     date: DateRange | undefined,
@@ -25,6 +26,7 @@ export function DatePickerWithRange({
   onDateChange
 }: DatePickerWithRangeProps) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const isMobile = useIsMobile();
 
   const handlePreset = (preset: 'today' | 'yesterday' | 'last7' | 'last30' | 'thisMonth' | 'lastMonth') => {
     const now = new Date();
@@ -88,7 +90,7 @@ export function DatePickerWithRange({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0 flex flex-col sm:flex-row bg-transparent border-0 text-white rounded-2xl" align="start">
-           <div className="flex flex-col space-y-2 border-r border-white/10 p-4 bg-white/5 backdrop-blur-md rounded-l-2xl">
+           <div className="flex flex-col space-y-2 sm:border-r sm:border-b-0 border-b border-white/10 p-4 bg-white/5 backdrop-blur-md rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none">
                 <Button variant="ghost" onClick={() => handlePreset('today')} className="justify-start">Hoje</Button>
                 <Button variant="ghost" onClick={() => handlePreset('yesterday')} className="justify-start">Ontem</Button>
                 <Button variant="ghost" onClick={() => handlePreset('last7')} className="justify-start">Últimos 7 dias</Button>
@@ -102,8 +104,8 @@ export function DatePickerWithRange({
             defaultMonth={date?.from}
             selected={date}
             onSelect={onDateChange}
-            numberOfMonths={2}
-            className="bg-white/5 backdrop-blur-md border-y border-r border-white/10 rounded-r-2xl"
+            numberOfMonths={isMobile ? 1 : 2}
+            className="bg-white/5 backdrop-blur-md border-y border-x sm:border-l-0 border-white/10 rounded-b-2xl sm:rounded-r-2xl sm:rounded-bl-none"
           />
         </PopoverContent>
       </Popover>
