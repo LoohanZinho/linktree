@@ -7,13 +7,13 @@ import {
   startOfDay,
   endOfDay,
   formatISO,
+  startOfMonth,
+  endOfMonth,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
-  Calendar as CalendarIcon,
   Eye,
   Trash2,
-  Clock,
   Hand,
 } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
@@ -22,23 +22,14 @@ import {
   collection,
   onSnapshot,
   query,
-  orderBy,
   where,
   Timestamp,
-  limit
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useToast } from "@/hooks/use-toast"
 import { clearAllData } from '@/actions/analytics';
 
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import {
   Card,
   CardContent,
@@ -64,6 +55,7 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { DatePickerWithPresets } from '@/components/date-picker-with-presets';
 
 const chartConfig = {
   clicks: {
@@ -172,13 +164,14 @@ export default function AdminDashboard() {
       const toDate = date?.to ? endOfDay(date.to) : undefined;
 
       // Fetch Visits
-      const visitsQuery = fromDate
-        ? query(
-            collection(db, 'visits'),
-            where('createdAt', '>=', fromDate),
-            where('createdAt', '<=', toDate || new Date())
-          )
-        : query(collection(db, 'visits'), orderBy('createdAt', 'desc'));
+      const visitsQuery =
+        fromDate && toDate
+          ? query(
+              collection(db, 'visits'),
+              where('createdAt', '>=', fromDate),
+              where('createdAt', '<=', toDate)
+            )
+          : query(collection(db, 'visits'));
 
       const unsubscribeVisits = onSnapshot(
         visitsQuery,
@@ -194,13 +187,14 @@ export default function AdminDashboard() {
       );
 
       // Fetch Clicks for Charts
-      const clicksQuery = fromDate
-        ? query(
-            collection(db, 'clicks'),
-            where('createdAt', '>=', fromDate),
-            where('createdAt', '<=', toDate || new Date())
-          )
-        : query(collection(db, 'clicks'), orderBy('createdAt', 'desc'));
+      const clicksQuery =
+        fromDate && toDate
+          ? query(
+              collection(db, 'clicks'),
+              where('createdAt', '>=', fromDate),
+              where('createdAt', '<=', toDate)
+            )
+          : query(collection(db, 'clicks'));
 
       const unsubscribeClicks = onSnapshot(
         clicksQuery,
@@ -457,58 +451,7 @@ export default function AdminDashboard() {
             Dashboard de Cliques
           </h1>
           <div className="w-full sm:w-auto">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant={'outline'}
-                  className={cn(
-                    'w-full sm:w-[300px] justify-start text-left font-normal bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 text-white hover:text-white',
-                    !date && 'text-gray-400'
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date?.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, 'PPP', { locale: ptBR })} -{' '}
-                        {format(date.to, 'PPP', { locale: ptBR })}
-                      </>
-                    ) : (
-                      format(date.from, 'PPP', { locale: ptBR })
-                    )
-                  ) : (
-                    <span>Escolha um período</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto p-0 bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl"
-                align="end"
-              >
-                <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
-                  numberOfMonths={2}
-                  locale={ptBR}
-                  className="bg-transparent text-white"
-                  classNames={{
-                    caption: 'text-white',
-                    caption_label: 'text-white',
-                    nav_button: 'text-white hover:bg-white/10',
-                    head_cell: 'text-white/60',
-                    day: 'text-white hover:bg-white/10',
-                    day_selected:
-                      'bg-purple-600 text-white hover:bg-purple-700',
-                    day_today: 'bg-white/20 text-white',
-                    day_outside: 'text-white/40',
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
+             <DatePickerWithPresets date={date} setDate={setDate} />
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
