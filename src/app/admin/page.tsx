@@ -213,12 +213,11 @@ export default function AdminDashboard() {
   return (
     <div className="dark flex min-h-screen w-full flex-col text-white">
        <Image
-        src="https://i.imgur.com/pjSQoR5.gif"
-        alt="Fundo animado"
+        src="https://i.imgur.com/KKZfDtk.jpeg"
+        alt="Fundo"
         fill
         className="object-cover -z-10 brightness-50"
-        data-ai-hint="animated background"
-        unoptimized
+        data-ai-hint="abstract background"
       />
       <main className="flex flex-1 flex-col gap-4 p-4 sm:p-6">
         <div className="flex items-center justify-between gap-4">
