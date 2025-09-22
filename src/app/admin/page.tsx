@@ -14,6 +14,7 @@ import {
   Eye,
   Trash2,
   Clock,
+  Hand,
 } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
@@ -142,6 +143,18 @@ type ChartDataPoint = {
   [key: string]: any;
 };
 
+const linkIdLabels: { [key: string]: string } = {
+    'whatsapp': 'WhatsApp',
+    'instagram': 'Instagram',
+    'tiktok': 'TikTok',
+    'youtube': 'YouTube',
+    'discord': 'Discord',
+    'gerente-inteligente': 'Gerente Inteligente',
+    'gerente-inteligente-ia': 'Gerente Inteligente IA',
+    'lucrando-lci': 'Lucrando com Influenciadores',
+    'deposito-aguas-brancas': 'Depósito Águas Brancas',
+};
+
 export default function AdminDashboard() {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: addDays(new Date(), -7),
@@ -150,7 +163,6 @@ export default function AdminDashboard() {
 
   const [allVisits, setAllVisits] = React.useState<Visit[]>([]);
   const [allClicks, setAllClicks] = React.useState<Click[]>([]);
-  const [recentClicks, setRecentClicks] = React.useState<Click[]>([]);
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([]);
 
   // Effect to fetch visits and clicks from Firestore
@@ -202,20 +214,10 @@ export default function AdminDashboard() {
           console.error('Failed to fetch clicks:', error);
         }
       );
-      
-      // Fetch Recent Clicks for Log
-      const recentClicksQuery = query(collection(db, 'clicks'), orderBy('createdAt', 'desc'), limit(10));
-      const unsubscribeRecentClicks = onSnapshot(recentClicksQuery, (snapshot) => {
-          const clicksData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Click));
-          setRecentClicks(clicksData);
-      }, (error) => {
-          console.error("Failed to fetch recent clicks:", error);
-      });
 
       return () => {
         unsubscribeVisits();
         unsubscribeClicks();
-        unsubscribeRecentClicks();
       };
     } catch (error) {
       console.error('Error setting up Firestore listener:', error);
@@ -335,45 +337,47 @@ export default function AdminDashboard() {
     );
   };
   
-  const ClickLog = ({ clicks }: { clicks: Click[] }) => {
-    const linkIdLabels: { [key: string]: string } = {
-        'whatsapp': 'WhatsApp',
-        'instagram': 'Instagram',
-        'tiktok': 'TikTok',
-        'youtube': 'YouTube',
-        'discord': 'Discord',
-        'gerente-inteligente': 'Gerente Inteligente',
-        'gerente-inteligente-ia': 'Gerente Inteligente IA',
-        'lucrando-lci': 'Lucrando com Influenciadores',
-        'deposito-aguas-brancas': 'Depósito Águas Brancas',
-    };
+  const ClickCountList = ({ clicks }: { clicks: Click[] }) => {
+    const clicksByLink = React.useMemo(() => {
+        const counts: { [key: string]: number } = {};
+        for (const linkId in linkIdLabels) {
+            counts[linkId] = 0;
+        }
+        clicks.forEach(click => {
+            if (counts.hasOwnProperty(click.linkId)) {
+                counts[click.linkId]++;
+            }
+        });
+        return Object.entries(counts).sort(([, a], [, b]) => b - a);
+    }, [clicks]);
 
     return (
         <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
             <CardHeader>
-                <CardTitle>Log de Cliques</CardTitle>
+                <CardTitle>Contagem de Cliques por Link</CardTitle>
                 <CardDescription className="text-gray-400">
-                    Os últimos 10 cliques registrados em ordem cronológica.
+                    Total de cliques registrados para cada botão no período selecionado.
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <ul className="space-y-3">
-                    {clicks.length > 0 ? clicks.map((click) => (
-                        <li key={click.id} className="flex justify-between items-center text-sm">
-                            <span className="text-gray-300">{linkIdLabels[click.linkId] || click.linkId}</span>
-                            <span className="text-gray-400 flex items-center gap-2">
-                                <Clock className="h-4 w-4" />
-                                {click.createdAt ? format(click.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
-                            </span>
+                <ul className="space-y-4">
+                    {clicksByLink.length > 0 ? clicksByLink.map(([linkId, count]) => (
+                        <li key={linkId} className="flex justify-between items-center text-sm font-medium">
+                            <span className="text-gray-300">{linkIdLabels[linkId] || linkId}</span>
+                            <div className="flex items-center gap-2">
+                                <Hand className="h-4 w-4 text-gray-500" />
+                                <span className="font-bold text-red-500 w-6 text-right">{count}</span>
+                            </div>
                         </li>
                     )) : (
-                        <p className="text-gray-400">Nenhum clique registrado ainda.</p>
+                        <p className="text-gray-400">Nenhum clique registrado no período.</p>
                     )}
                 </ul>
             </CardContent>
         </Card>
-    )
-  }
+    );
+}
+
 
   const DangerousActions = () => {
     const { toast } = useToast();
@@ -516,7 +520,7 @@ export default function AdminDashboard() {
            <StatCard
             title="Cliques no Período"
             value={allClicks.length}
-            icon={<Eye className="h-4 w-4 text-green-400" />}
+            icon={<Hand className="h-4 w-4 text-green-400" />}
           />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
@@ -539,7 +543,7 @@ export default function AdminDashboard() {
           />
         </div>
          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-            <ClickLog clicks={recentClicks} />
+            <ClickCountList clicks={allClicks} />
             <DangerousActions />
         </div>
       </main>
