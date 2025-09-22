@@ -545,13 +545,13 @@ export default function AdminDashboard() {
   };
   
   const projectChartData = chartData.map(item => {
-    const newItem = { date: item.date };
     const projectKeys = [
       'gerente-inteligente',
       'gerente-inteligente-ia',
       'lucrando-lci',
       'deposito-aguas-brancas',
     ];
+    const newItem: ChartDataPoint = { date: item.date };
     projectKeys.forEach(key => {
       newItem[key] = item[key] ?? 0;
     });
@@ -559,8 +559,8 @@ export default function AdminDashboard() {
   });
 
   const socialChartData = chartData.map(item => {
-    const newItem = { date: item.date };
     const socialKeys = ['whatsapp', 'instagram', 'tiktok', 'youtube', 'discord'];
+    const newItem: ChartDataPoint = { date: item.date };
     socialKeys.forEach(key => {
       newItem[key] = item[key] ?? 0;
     });
