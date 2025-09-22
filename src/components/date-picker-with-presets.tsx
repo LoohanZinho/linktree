@@ -38,7 +38,7 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
   }, [initialDate, date])
 
 
-  const setPreset = (preset: 'today' | 'yesterday' | 'this-week' | 'last-7-days' | 'this-month' | 'all-time') => {
+  const setPreset = (preset: 'today' | 'yesterday' | 'last-7-days' | 'this-month' | 'all-time') => {
     const now = new Date();
     switch (preset) {
         case 'today':
@@ -47,9 +47,6 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
         case 'yesterday':
             const yesterday = subDays(now, 1);
             setDate({ from: yesterday, to: yesterday });
-            break;
-        case 'this-week':
-            setDate({ from: startOfWeek(now, { locale: ptBR }), to: endOfWeek(now, { locale: ptBR }) });
             break;
         case 'last-7-days':
             setDate({ from: subDays(now, 6), to: now });
@@ -68,7 +65,6 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
     <div className="flex flex-col space-y-2 md:pr-4 md:border-r md:border-white/10">
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('today')}>Hoje</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('yesterday')}>Ontem</Button>
-        <Button variant="ghost" className="justify-start" onClick={() => setPreset('this-week')}>Esta semana</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('last-7-days')}>Últimos 7 dias</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('this-month')}>Este mês</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('all-time')}>Máximo</Button>
@@ -103,7 +99,13 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-2 md:p-0 flex flex-col md:flex-row bg-black/80 backdrop-blur-md border-white/10 text-white rounded-2xl" align="end">
-            <Presets />
+            <div className="flex flex-col space-y-2 md:pr-4 md:border-r md:border-white/10">
+                <Button variant="ghost" className="justify-start" onClick={() => setPreset('today')}>Hoje</Button>
+                <Button variant="ghost" className="justify-start" onClick={() => setPreset('yesterday')}>Ontem</Button>
+                <Button variant="ghost" className="justify-start" onClick={() => setPreset('last-7-days')}>Últimos 7 dias</Button>
+                <Button variant="ghost" className="justify-start" onClick={() => setPreset('this-month')}>Este mês</Button>
+                <Button variant="ghost" className="justify-start" onClick={() => setPreset('all-time')}>Máximo</Button>
+            </div>
             <Calendar
                 initialFocus
                 mode="range"
@@ -114,7 +116,7 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
                 locale={ptBR}
                 className="p-4"
                 classNames={{
-                    day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                    day_selected: "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
                     day_today: "bg-accent text-accent-foreground",
                     day_range_middle: "aria-selected:bg-accent/50 aria-selected:text-accent-foreground",
                     day_range_start: "day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground",
