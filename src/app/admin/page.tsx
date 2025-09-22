@@ -338,21 +338,30 @@ export default function AdminDashboard() {
                 tickLine={false}
                 axisLine={false}
                 stroke="rgba(255,255,255,0.7)"
-                interval={0}
-                tickFormatter={(value) => {
-                  const date = new Date(value);
-                  return format(new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000), 'dd/MM');
+                tickMargin={10}
+                tickFormatter={(value, index) => {
+                    const date = new Date(value);
+                    const formattedDate = format(new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000), 'dd/MM');
+                    return formattedDate;
                 }}
+                interval={0}
                 tick={(props) => {
                     const { x, y, payload, index } = props;
                     let textAnchor = "middle";
-                    if (index === 0) textAnchor = "start";
-                    if (index === data.length - 1) textAnchor = "end";
+                    let dx = 0;
+                    if (index === 0) {
+                        textAnchor = "start";
+                        dx = 4;
+                    }
+                    if (index === data.length - 1) {
+                        textAnchor = "end";
+                        dx = -4;
+                    }
 
                     return (
                         <g transform={`translate(${x},${y})`}>
-                            <text x={0} y={0} dy={16} textAnchor={textAnchor} fill="rgba(255,255,255,0.7)" fontSize={12}>
-                                {format(new Date(payload.value.replace(/-/g, '/')), 'dd/MM')}
+                            <text x={0} y={0} dy={16} dx={dx} textAnchor={textAnchor} fill="rgba(255,255,255,0.7)" fontSize={12}>
+                               {format(new Date(payload.value.replace(/-/g, '/')), 'dd/MM')}
                             </text>
                         </g>
                     );
