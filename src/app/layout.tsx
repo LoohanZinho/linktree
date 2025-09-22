@@ -7,7 +7,7 @@ import { VisitTracker } from '@/components/VisitTracker';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'Novo App',
+  title: 'Lohan Santos',
   description: 'Criado com Firebase Studio',
 };
 
