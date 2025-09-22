@@ -243,16 +243,16 @@ export default function AdminDashboard() {
         data-ai-hint="abstract background"
       />
       <main className="flex flex-1 flex-col gap-4 p-4 sm:p-6">
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-semibold">Dashboard de Cliques</h1>
-          <div className="grid gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h1 className="text-2xl font-semibold flex-shrink-0">Dashboard de Cliques</h1>
+          <div className="w-full sm:w-auto">
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   id="date"
                   variant={'outline'}
                   className={cn(
-                    'w-[300px] justify-start text-left font-normal bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 text-white hover:text-white',
+                    'w-full sm:w-[300px] justify-start text-left font-normal bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 text-white hover:text-white',
                     !date && 'text-gray-400'
                   )}
                 >
