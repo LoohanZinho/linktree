@@ -71,8 +71,8 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
     <div className="flex flex-col space-y-2 pr-4 border-r border-white/10">
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('today')}>Hoje</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('yesterday')}>Ontem</Button>
+        <Button variant="ghost" className="justify-start" onClick={() => setPreset('this-week')}>Esta semana</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('last-7-days')}>Últimos 7 dias</Button>
-        <Button variant="ghost" className="justify-start" onClick={() => setPreset('last-30-days')}>Últimos 30 dias</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('this-month')}>Este mês</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('all-time')}>Máximo</Button>
     </div>
