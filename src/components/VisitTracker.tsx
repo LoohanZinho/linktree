@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from 'react';
-// Verifique se o caminho para a sua ação está correto
-import { logVisit } from '@/actions/analytics';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export function VisitTracker() {
   useEffect(() => {
@@ -15,7 +15,10 @@ export function VisitTracker() {
       if (lastVisit !== today) {
         try {
           // ...chama a ação para registrar a visita no banco de dados...
-          await logVisit(); 
+          const visitsCollection = collection(db, 'visits');
+          await addDoc(visitsCollection, {
+            createdAt: serverTimestamp(),
+          });
           // ...e marca que o usuário visitou hoje.
           localStorage.setItem('lastVisitDate', today);
         } catch (error) {

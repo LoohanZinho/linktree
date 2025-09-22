@@ -16,10 +16,13 @@ import {
   onSnapshot,
   query,
   Timestamp,
+  getDocs,
+  writeBatch,
+  addDoc,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useToast } from "@/hooks/use-toast"
-import { clearAllData } from '@/actions/analytics';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -345,6 +348,37 @@ export default function AdminDashboard() {
   const DangerousActions = () => {
     const { toast } = useToast();
     const [isPending, startTransition] = React.useTransition();
+
+    const clearAllData = async (): Promise<{ success: boolean, error?: string }> => {
+        try {
+            const collectionsToDelete = ['visits', 'clicks'];
+            const batch = writeBatch(db);
+
+            for (const col of collectionsToDelete) {
+                const collectionRef = collection(db, col);
+                const snapshot = await getDocs(collectionRef);
+                if (!snapshot.empty) {
+                    snapshot.docs.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                }
+            }
+            
+            await batch.commit();
+            
+            // The UI will update automatically via onSnapshot listeners.
+            
+            return { success: true };
+
+        } catch (error) {
+            console.error("Failed to clear all data:", error);
+            if (error instanceof Error) {
+                return { success: false, error: error.message };
+            }
+            return { success: false, error: 'An unknown error occurred.' };
+        }
+    }
+
 
     const handleClearData = () => {
         startTransition(async () => {

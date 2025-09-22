@@ -22,7 +22,9 @@ import {
 } from '@/components/ui/collapsible';
 import { DiscordPopup } from '@/components/discord-popup';
 import { Separator } from '@/components/ui/separator';
-import { logClick } from '@/actions/analytics';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+
 
 export default function Page() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -35,8 +37,20 @@ export default function Page() {
     }
   }, []);
 
-  const handleLinkClick = (linkId: string) => {
-    logClick(linkId);
+  const handleLinkClick = async (linkId: string) => {
+    if (!linkId) {
+      console.error('logClick failed: linkId is missing.');
+      return;
+    }
+    try {
+      const clicksCollection = collection(db, 'clicks');
+      await addDoc(clicksCollection, {
+        linkId: linkId,
+        createdAt: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error(`Failed to log click for ${linkId}:`, error);
+    }
   };
 
   const socialLinks = [
