@@ -2,27 +2,19 @@
 
 import * as React from 'react';
 import {
-  addDays,
   format,
-  startOfDay,
-  endOfDay,
   formatISO,
-  startOfMonth,
-  endOfMonth,
 } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import {
   Eye,
   Trash2,
   Hand,
 } from 'lucide-react';
-import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
 import {
   collection,
   onSnapshot,
   query,
-  where,
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -55,7 +47,6 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { DatePickerWithPresets } from '@/components/date-picker-with-presets';
 
 const chartConfig = {
   clicks: {
@@ -148,11 +139,6 @@ const linkIdLabels: { [key: string]: string } = {
 };
 
 export default function AdminDashboard() {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: addDays(new Date(), -7),
-    to: new Date(),
-  });
-
   const [allVisits, setAllVisits] = React.useState<Visit[]>([]);
   const [allClicks, setAllClicks] = React.useState<Click[]>([]);
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([]);
@@ -160,18 +146,8 @@ export default function AdminDashboard() {
   // Effect to fetch visits and clicks from Firestore
   React.useEffect(() => {
     try {
-      const fromDate = date?.from ? startOfDay(date.from) : undefined;
-      const toDate = date?.to ? endOfDay(date.to) : undefined;
-
       // Fetch Visits
-      const visitsQuery =
-        fromDate && toDate
-          ? query(
-              collection(db, 'visits'),
-              where('createdAt', '>=', fromDate),
-              where('createdAt', '<=', toDate)
-            )
-          : query(collection(db, 'visits'));
+      const visitsQuery = query(collection(db, 'visits'));
 
       const unsubscribeVisits = onSnapshot(
         visitsQuery,
@@ -187,14 +163,7 @@ export default function AdminDashboard() {
       );
 
       // Fetch Clicks for Charts
-      const clicksQuery =
-        fromDate && toDate
-          ? query(
-              collection(db, 'clicks'),
-              where('createdAt', '>=', fromDate),
-              where('createdAt', '<=', toDate)
-            )
-          : query(collection(db, 'clicks'));
+      const clicksQuery = query(collection(db, 'clicks'));
 
       const unsubscribeClicks = onSnapshot(
         clicksQuery,
@@ -216,7 +185,7 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error('Error setting up Firestore listener:', error);
     }
-  }, [date]);
+  }, []);
 
   // Process data for charts
   React.useEffect(() => {
@@ -350,7 +319,7 @@ export default function AdminDashboard() {
             <CardHeader>
                 <CardTitle>Contagem de Cliques por Link</CardTitle>
                 <CardDescription className="text-gray-400">
-                    Total de cliques registrados para cada botão no período selecionado.
+                    Total de cliques registrados para cada botão.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -364,7 +333,7 @@ export default function AdminDashboard() {
                             </div>
                         </li>
                     )) : (
-                        <p className="text-gray-400">Nenhum clique registrado no período.</p>
+                        <p className="text-gray-400">Nenhum clique registrado.</p>
                     )}
                 </ul>
             </CardContent>
@@ -450,18 +419,15 @@ export default function AdminDashboard() {
           <h1 className="text-2xl font-semibold flex-shrink-0">
             Dashboard de Cliques
           </h1>
-          <div className="w-full sm:w-auto">
-             <DatePickerWithPresets date={date} setDate={setDate} />
-          </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
-            title="Visitas no Período"
+            title="Total de Visitas"
             value={allVisits.length}
             icon={<Eye className="h-4 w-4 text-purple-400" />}
           />
            <StatCard
-            title="Cliques no Período"
+            title="Total de Cliques"
             value={allClicks.length}
             icon={<Hand className="h-4 w-4 text-green-400" />}
           />
