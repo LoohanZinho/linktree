@@ -11,6 +11,7 @@ import {
   Eye,
   Trash2,
   Hand,
+  Users,
 } from 'lucide-react';
 import Image from 'next/image';
 import {
@@ -127,6 +128,12 @@ type Visit = {
   createdAt: Timestamp;
 };
 
+type TrafficSource = {
+  id: string;
+  source: string;
+  createdAt: Timestamp;
+}
+
 type ChartDataPoint = {
   date: string;
   [key: string]: any;
@@ -144,13 +151,21 @@ const linkIdLabels: { [key: string]: string } = {
     'deposito-aguas-brancas': 'Depósito Águas Brancas',
 };
 
+const trafficSourceLabels: { [key: string]: string } = {
+    'zap': 'WhatsApp',
+    'insta': 'Instagram',
+    'ttk': 'TikTok',
+};
+
 export default function AdminDashboard() {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>(undefined);
   const [visits, setVisits] = React.useState<Visit[]>([]);
   const [clicks, setClicks] = React.useState<Click[]>([]);
+  const [trafficSources, setTrafficSources] = React.useState<TrafficSource[]>([]);
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([]);
+  const [trafficChartData, setTrafficChartData] = React.useState<ChartDataPoint[]>([]);
 
-  // Effect to fetch visits and clicks from Firestore based on date range
+  // Effect to fetch data from Firestore based on date range
   React.useEffect(() => {
     const fetchFirestoreData = (collectionName: string, setData: (data: any[]) => void) => {
       let dataQuery = query(collection(db, collectionName));
@@ -182,48 +197,58 @@ export default function AdminDashboard() {
 
     const unsubscribeVisits = fetchFirestoreData('visits', setVisits);
     const unsubscribeClicks = fetchFirestoreData('clicks', setClicks);
+    const unsubscribeTraffic = fetchFirestoreData('traffic_sources', setTrafficSources);
 
     return () => {
       unsubscribeVisits();
       unsubscribeClicks();
+      unsubscribeTraffic();
     };
   }, [dateRange]);
 
   // Process data for charts
   React.useEffect(() => {
-    const dataByDate: { [date: string]: ChartDataPoint } = {};
-
-    clicks.forEach((click) => {
-      if (click.createdAt) {
-        const clickDate = formatISO(click.createdAt.toDate(), {
-          representation: 'date',
-        });
-        if (!dataByDate[clickDate]) {
-          dataByDate[clickDate] = { date: clickDate };
+    const processDataForChart = (
+      sourceData: Array<Click | TrafficSource>,
+      keyField: 'linkId' | 'source'
+    ) => {
+      const dataByDate: { [date: string]: ChartDataPoint } = {};
+      sourceData.forEach((item) => {
+        if (item.createdAt) {
+          const itemDate = formatISO(item.createdAt.toDate(), {
+            representation: 'date',
+          });
+          if (!dataByDate[itemDate]) {
+            dataByDate[itemDate] = { date: itemDate };
+          }
+          const key = item[keyField as keyof typeof item] as string;
+          if (!dataByDate[itemDate][key]) {
+            dataByDate[itemDate][key] = 0;
+          }
+          dataByDate[itemDate][key]++;
         }
-        if (!dataByDate[clickDate][click.linkId]) {
-          dataByDate[clickDate][click.linkId] = 0;
-        }
-        dataByDate[clickDate][click.linkId]++;
-      }
-    });
+      });
+      return Object.values(dataByDate).sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+    };
 
-    const sortedData = Object.values(dataByDate).sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-    setChartData(sortedData);
-  }, [clicks]);
+    setChartData(processDataForChart(clicks, 'linkId'));
+    setTrafficChartData(processDataForChart(trafficSources, 'source'));
+  }, [clicks, trafficSources]);
 
-  const ClicksChart = ({
+  const GenericChart = ({
     data,
     title,
     description,
     dataKeys,
+    chartConfig,
   }: {
     data: any[];
     title: string;
     description: string;
     dataKeys: string[];
+    chartConfig: ChartConfig;
   }) => {
     const chartId = React.useId().replace(/:/g, '');
 
@@ -302,46 +327,57 @@ export default function AdminDashboard() {
     );
   };
   
-  const ClickCountList = ({ clicks }: { clicks: Click[] }) => {
-    const clicksByLink = React.useMemo(() => {
-        const counts: { [key: string]: number } = {};
-        for (const linkId in linkIdLabels) {
-            counts[linkId] = 0;
-        }
-        clicks.forEach(click => {
-            if (counts.hasOwnProperty(click.linkId)) {
-                counts[click.linkId]++;
-            }
-        });
-        return Object.entries(counts).sort(([, a], [, b]) => b - a);
-    }, [clicks]);
+  const CountList = ({
+    items,
+    title,
+    description,
+    labels,
+    icon: Icon
+  }: {
+    items: Array<{linkId: string} | {source: string}>,
+    title: string,
+    description: string,
+    labels: {[key: string]: string},
+    icon: React.ElementType
+  }) => {
+      const counts = React.useMemo(() => {
+          const countsMap: { [key: string]: number } = {};
+          for (const key in labels) {
+              countsMap[key] = 0;
+          }
+          items.forEach(item => {
+              const key = 'linkId' in item ? item.linkId : item.source;
+              if (countsMap.hasOwnProperty(key)) {
+                  countsMap[key]++;
+              }
+          });
+          return Object.entries(countsMap).sort(([, a], [, b]) => b - a);
+      }, [items, labels]);
 
-    return (
-        <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
-            <CardHeader>
-                <CardTitle>Contagem de Cliques por Link</CardTitle>
-                <CardDescription className="text-gray-400">
-                    Total de cliques para cada botão no período selecionado.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ul className="space-y-4">
-                    {clicksByLink.length > 0 ? clicksByLink.map(([linkId, count]) => (
-                        <li key={linkId} className="flex justify-between items-center text-sm font-medium">
-                            <span className="text-gray-300">{linkIdLabels[linkId] || linkId}</span>
-                            <div className="flex items-center gap-2">
-                                <Hand className="h-4 w-4 text-gray-500" />
-                                <span className="font-bold text-red-500 w-6 text-right">{count}</span>
-                            </div>
-                        </li>
-                    )) : (
-                        <p className="text-gray-400">Nenhum clique registrado.</p>
-                    )}
-                </ul>
-            </CardContent>
-        </Card>
-    );
-}
+      return (
+          <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+              <CardHeader>
+                  <CardTitle>{title}</CardTitle>
+                  <CardDescription className="text-gray-400">{description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <ul className="space-y-4">
+                      {counts.length > 0 ? counts.map(([key, count]) => (
+                          <li key={key} className="flex justify-between items-center text-sm font-medium">
+                              <span className="text-gray-300">{labels[key] || key}</span>
+                              <div className="flex items-center gap-2">
+                                  <Icon className="h-4 w-4 text-gray-500" />
+                                  <span className="font-bold text-red-500 w-6 text-right">{count}</span>
+                              </div>
+                          </li>
+                      )) : (
+                          <p className="text-gray-400">Nenhum dado registrado.</p>
+                      )}
+                  </ul>
+              </CardContent>
+          </Card>
+      );
+  }
 
 
   const DangerousActions = () => {
@@ -350,7 +386,7 @@ export default function AdminDashboard() {
 
     const clearAllData = async (): Promise<{ success: boolean, error?: string }> => {
         try {
-            const collectionsToDelete = ['visits', 'clicks'];
+            const collectionsToDelete = ['visits', 'clicks', 'traffic_sources'];
             const batch = writeBatch(db);
 
             for (const col of collectionsToDelete) {
@@ -364,8 +400,6 @@ export default function AdminDashboard() {
             }
             
             await batch.commit();
-            
-            // The UI will update automatically via onSnapshot listeners.
             
             return { success: true };
 
@@ -385,7 +419,7 @@ export default function AdminDashboard() {
             if (result.success) {
                 toast({
                     title: "Sucesso!",
-                    description: "Todos os dados de visitas e cliques foram removidos.",
+                    description: "Todos os dados de visitas, cliques e fontes de tráfego foram removidos.",
                     variant: "default",
                 });
             } else {
@@ -419,7 +453,7 @@ export default function AdminDashboard() {
                             <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
                             <AlertDialogDescription className="text-gray-400">
                                 Esta ação não pode ser desfeita. Isso removerá permanentemente todos os dados
-                                das coleções 'visits' e 'clicks'.
+                                das coleções 'visits', 'clicks' e 'traffic_sources'.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -431,12 +465,19 @@ export default function AdminDashboard() {
                     </AlertDialogContent>
                 </AlertDialog>
                  <p className="text-xs text-center text-gray-500">
-                    Esta operação removerá todos os dados das coleções 'visits' e 'clicks'.
+                    Esta operação removerá todos os dados das coleções de análise.
                 </p>
             </CardContent>
         </Card>
     )
   }
+
+  const trafficChartConfig = {
+    ...chartConfig, // Reuse existing colors
+    'WhatsApp': { label: 'WhatsApp', color: 'hsl(var(--chart-1))' },
+    'Instagram': { label: 'Instagram', color: 'hsl(var(--chart-2))' },
+    'TikTok': { label: 'TikTok', color: 'hsl(var(--chart-3))' },
+  };
 
   return (
     <div className="dark relative flex min-h-screen w-full flex-col text-white">
@@ -450,13 +491,13 @@ export default function AdminDashboard() {
       <main className="flex flex-1 flex-col gap-6 p-4 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="text-2xl font-semibold flex-shrink-0">
-            Dashboard de Cliques
+            Dashboard de Análise
           </h1>
           <div className="w-full sm:w-auto">
             <DatePickerWithPresets onDateChange={setDateRange} />
           </div>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <StatCard
             title="Total de Visitas"
             value={visits.length}
@@ -467,15 +508,21 @@ export default function AdminDashboard() {
             value={clicks.length}
             icon={<Hand className="h-4 w-4 text-green-400" />}
           />
+           <StatCard
+            title="Fontes de Tráfego"
+            value={trafficSources.length}
+            icon={<Users className="h-4 w-4 text-blue-400" />}
+          />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-          <ClicksChart
+          <GenericChart
             data={chartData}
             title="Cliques nas Redes Sociais"
             description="Total de cliques por dia nos links de redes sociais."
             dataKeys={['whatsapp', 'instagram', 'tiktok', 'youtube', 'discord']}
+            chartConfig={chartConfig}
           />
-          <ClicksChart
+          <GenericChart
             data={chartData}
             title="Cliques nos Projetos"
             description="Total de cliques por dia nos links dos projetos."
@@ -485,10 +532,33 @@ export default function AdminDashboard() {
               'lucrando-lci',
               'deposito-aguas-brancas',
             ]}
+            chartConfig={chartConfig}
           />
         </div>
          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-            <ClickCountList clicks={clicks} />
+            <CountList 
+              items={clicks}
+              title="Contagem de Cliques por Link"
+              description="Total de cliques para cada botão no período selecionado."
+              labels={linkIdLabels}
+              icon={Hand}
+            />
+            <GenericChart
+              data={trafficChartData}
+              title="Fontes de Tráfego"
+              description="Total de visitas por dia de cada fonte de tráfego."
+              dataKeys={['WhatsApp', 'Instagram', 'TikTok']}
+              chartConfig={trafficChartConfig}
+            />
+        </div>
+        <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+            <CountList 
+              items={trafficSources}
+              title="Contagem por Fonte de Tráfego"
+              description="Total de visitas de cada fonte no período selecionado."
+              labels={trafficSourceLabels}
+              icon={Users}
+            />
             <DangerousActions />
         </div>
       </main>
