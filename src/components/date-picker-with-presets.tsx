@@ -117,9 +117,9 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
                 locale={ptBR}
                 className="p-4"
                 classNames={{
-                    day_selected: "bg-red-600 text-white hover:bg-red-700 focus:bg-red-600",
+                    day_selected: "text-primary-foreground bg-primary hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
                     day_today: "bg-white/20 text-white",
-                    day_range_middle: "aria-selected:bg-red-600/50 aria-selected:text-white",
+                    day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
                 }}
             />
         </PopoverContent>
