@@ -12,28 +12,10 @@ export function VisitTracker() {
 
       if (lastVisit !== today) {
         try {
-          let city = 'Desconhecida';
-          try {
-            const apiKey = process.env.NEXT_PUBLIC_IPGEOLOCATION_API_KEY;
-            if (apiKey) {
-              const response = await fetch(`https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}`);
-              if (response.ok) {
-                  const data = await response.json();
-                  city = data.city || 'Desconhecida';
-              } else {
-                 console.error("IP Geolocation API request failed:", response.statusText);
-              }
-            } else {
-              console.warn("IP Geolocation API key is missing.");
-            }
-          } catch (apiError) {
-              console.error("Could not fetch location data:", apiError);
-          }
-
           const visitsCollection = collection(db, 'visits');
           await addDoc(visitsCollection, {
             createdAt: serverTimestamp(),
-            city: city
+            city: 'Desconhecida'
           });
 
           localStorage.setItem('lastVisitDate', today);
