@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { addDays, format, startOfDay, endOfDay } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { Calendar as CalendarIcon, Eye } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
@@ -229,7 +230,7 @@ export default function AdminDashboard() {
                   id="date"
                   variant={'outline'}
                   className={cn(
-                    'w-[300px] justify-start text-left font-normal bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:text-white',
+                    'w-[300px] justify-start text-left font-normal bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 text-white hover:text-white',
                     !date && 'text-gray-400'
                   )}
                 >
@@ -237,18 +238,18 @@ export default function AdminDashboard() {
                   {date?.from ? (
                     date.to ? (
                       <>
-                        {format(date.from, 'LLL dd, y')} -{' '}
-                        {format(date.to, 'LLL dd, y')}
+                        {format(date.from, 'PPP', { locale: ptBR })} -{' '}
+                        {format(date.to, 'PPP', { locale: ptBR })}
                       </>
                     ) : (
-                      format(date.from, 'LLL dd, y')
+                      format(date.from, 'PPP', { locale: ptBR })
                     )
                   ) : (
                     <span>Escolha um período</span>
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl" align="end">
+              <PopoverContent className="w-auto p-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white" align="end">
                 <Calendar
                   initialFocus
                   mode="range"
@@ -256,6 +257,7 @@ export default function AdminDashboard() {
                   selected={date}
                   onSelect={setDate}
                   numberOfMonths={2}
+                  locale={ptBR}
                 />
               </PopoverContent>
             </Popover>
