@@ -94,7 +94,7 @@ export default function Page() {
   };
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center p-4 sm:p-6 md:p-8 text-white">
+    <main className="relative flex min-h-screen flex-col items-center p-4 sm:p-6 md:p-8 text-white pb-32">
       <Image
         src="https://i.imgur.com/pjSQoR5.gif"
         alt="Fundo animado"
