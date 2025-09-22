@@ -83,39 +83,40 @@ export default function MusicPlayer() {
   };
 
   const formatTime = (time: number) => {
+    if (isNaN(time)) return '0:00';
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
   return (
-    <div className="w-full bg-black/30 backdrop-blur-lg rounded-2xl border border-white/10 p-4 text-white shadow-2xl">
-      <div className="flex items-center gap-4">
+    <div className="w-full bg-black/30 backdrop-blur-lg rounded-2xl border border-white/10 p-3 sm:p-4 text-white shadow-2xl">
+      <div className="flex items-center gap-3 sm:gap-4">
         <Image
           src={currentSong.cover || 'https://i.imgur.com/5d5tC2d.png'}
           alt={currentSong.title}
           width={64}
           height={64}
-          className="rounded-md w-16 h-16 object-cover"
+          className="rounded-md w-12 h-12 sm:w-16 sm:h-16 object-cover"
           unoptimized
         />
         <div className="flex-1 overflow-hidden">
-          <h3 className="font-bold text-base truncate">{currentSong.title}</h3>
-          <p className="text-sm text-gray-400 truncate">{currentSong.artist}</p>
+          <h3 className="font-bold text-sm sm:text-base truncate">{currentSong.title}</h3>
+          <p className="text-xs sm:text-sm text-gray-400 truncate">{currentSong.artist}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
            <button onClick={handlePrev} className="p-2 transition-transform duration-200 hover:scale-110 active:scale-95">
-             <SkipBack className="h-5 w-5" />
+             <SkipBack className="h-4 w-4 sm:h-5 sm:w-5" />
            </button>
            <button onClick={togglePlay} className="p-2 rounded-full bg-white/20 transition-transform duration-200 hover:scale-110 active:scale-95">
-             {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+             {isPlaying ? <Pause className="h-5 w-5 sm:h-6 sm:w-6" /> : <Play className="h-5 w-5 sm:h-6 sm:w-6" />}
            </button>
            <button onClick={handleNext} className="p-2 transition-transform duration-200 hover:scale-110 active:scale-95">
-             <SkipForward className="h-5 w-5" />
+             <SkipForward className="h-4 w-4 sm:h-5 sm:w-5" />
            </button>
         </div>
       </div>
-      <div className="mt-4">
+      <div className="mt-2 sm:mt-4">
         <div className="flex items-center gap-2">
             <span className="text-xs w-10 text-center">{formatTime(progress)}</span>
             <Slider

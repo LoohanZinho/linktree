@@ -273,7 +273,7 @@ export default function Page() {
           )
         )}
       </div>
-      <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 w-auto max-w-sm sm:w-80 animate-slide-up-fade-in animation-delay-800">
+      <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 z-20 animate-slide-up-fade-in animation-delay-800">
          <MusicPlayer />
       </div>
     </main>
