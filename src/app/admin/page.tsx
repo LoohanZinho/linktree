@@ -221,7 +221,7 @@ export default function AdminDashboard() {
       keyField: 'linkId' | 'source',
       dataKeys: string[]
     ) => {
-      const now = new date();
+      const now = new Date();
       const from = dateRange?.from || subDays(now, 6);
       const to = dateRange?.to || now;
       let interval = eachDayOfInterval({ start: from, end: to });
@@ -306,7 +306,7 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[250px] w-full">
-            <AreaChart data={data} accessibilityLayer>
+            <AreaChart data={data} accessibilityLayer margin={{ left: 12, right: 12 }}>
               <defs>
                 {Object.keys(chartConfig).map((key) => {
                   const color =
