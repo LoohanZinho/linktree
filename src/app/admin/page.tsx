@@ -339,9 +339,11 @@ export default function AdminDashboard() {
                 tickMargin={10}
                 axisLine={false}
                 stroke="rgba(255,255,255,0.7)"
-                tickFormatter={(value) =>
-                  format(new Date(value), 'dd/MM', { timeZone: 'UTC' })
-                }
+                tickFormatter={(value) => {
+                  const date = new Date(value);
+                  // Adiciona o fuso horário UTC para evitar problemas de deslocamento de dia
+                  return format(new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000), 'dd/MM');
+                }}
               />
               <YAxis stroke="rgba(255,255,255,0.7)" hide />
               <ChartTooltip
