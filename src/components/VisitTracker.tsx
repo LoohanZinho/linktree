@@ -7,19 +7,28 @@ import { db } from '@/lib/firebase';
 export function VisitTracker() {
   useEffect(() => {
     const trackVisit = async () => {
-      // Obtém a data no formato YYYY-MM-DD
       const today = new Date().toISOString().split('T')[0]; 
       const lastVisit = localStorage.getItem('lastVisitDate');
 
-      // Se a última visita não foi hoje...
       if (lastVisit !== today) {
         try {
-          // ...chama a ação para registrar a visita no banco de dados...
+          let city = 'Unknown';
+          try {
+            const response = await fetch('https://ip-api.com/json');
+            if (response.ok) {
+                const data = await response.json();
+                city = data.city || 'Unknown';
+            }
+          } catch (apiError) {
+              console.error("Could not fetch location data:", apiError);
+          }
+
           const visitsCollection = collection(db, 'visits');
           await addDoc(visitsCollection, {
             createdAt: serverTimestamp(),
+            city: city
           });
-          // ...e marca que o usuário visitou hoje.
+
           localStorage.setItem('lastVisitDate', today);
         } catch (error) {
           console.error("Failed to track visit:", error);
@@ -28,7 +37,7 @@ export function VisitTracker() {
     };
 
     trackVisit();
-  }, []); // O array vazio [] garante que isso rode apenas uma vez quando o componente é montado.
+  }, []); 
 
-  return null; // Este componente não renderiza nada na tela.
+  return null;
 }

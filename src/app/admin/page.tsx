@@ -16,6 +16,8 @@ import {
   Hand,
   Users,
   Clock,
+  MapPin,
+  Building,
 } from 'lucide-react';
 import Image from 'next/image';
 import {
@@ -56,6 +58,14 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { DatePickerWithRange } from '@/components/ui/date-picker-with-range';
 import type { DateRange } from 'react-day-picker';
@@ -131,6 +141,7 @@ type Click = {
 type Visit = {
   id: string;
   createdAt: Timestamp;
+  city?: string;
 };
 
 type TrafficSource = {
@@ -143,6 +154,11 @@ type ChartDataPoint = {
   date: string;
   [key: string]: any;
 };
+
+type TopCity = {
+    city: string;
+    count: number;
+}
 
 const linkIdLabels: { [key: string]: string } = {
     'whatsapp': 'WhatsApp',
@@ -172,6 +188,8 @@ export default function AdminDashboard() {
   const [trafficSources, setTrafficSources] = React.useState<TrafficSource[]>([]);
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([]);
   const [trafficChartData, setTrafficChartData] = React.useState<ChartDataPoint[]>([]);
+  const [topCities, setTopCities] = React.useState<TopCity[]>([]);
+  const [uniqueCitiesCount, setUniqueCitiesCount] = React.useState(0);
 
   // Effect to fetch data from Firestore
   React.useEffect(() => {
@@ -214,7 +232,7 @@ export default function AdminDashboard() {
     };
   }, [dateRange]);
 
-  // Process data for charts
+  // Process data for charts and city stats
   React.useEffect(() => {
     const processDataForChart = (
       sourceData: Array<Click | TrafficSource>,
@@ -233,7 +251,6 @@ export default function AdminDashboard() {
       
       const dataByDate: { [date: string]: ChartDataPoint } = {};
 
-      // Initialize all days in the interval with 0 for all keys
       interval.forEach(day => {
           const itemDate = formatISO(day, { representation: 'date' });
           dataByDate[itemDate] = { date: itemDate };
@@ -242,7 +259,6 @@ export default function AdminDashboard() {
           });
       });
 
-      // Populate with existing data
       sourceData.forEach((item) => {
         if (item.createdAt) {
           const itemDate = formatISO(item.createdAt.toDate(), {
@@ -261,6 +277,21 @@ export default function AdminDashboard() {
       );
     };
 
+    const processCityData = (visitData: Visit[]) => {
+        const cityCounts: { [city: string]: number } = {};
+        visitData.forEach(visit => {
+            const city = visit.city || 'Desconhecida';
+            cityCounts[city] = (cityCounts[city] || 0) + 1;
+        });
+
+        const sortedCities = Object.entries(cityCounts)
+            .map(([city, count]) => ({ city, count }))
+            .sort((a, b) => b.count - a.count);
+        
+        setUniqueCitiesCount(sortedCities.length);
+        setTopCities(sortedCities.slice(0, 5));
+    }
+
     const projectKeys = [
       'gerente-inteligente',
       'gerente-inteligente-ia',
@@ -274,7 +305,8 @@ export default function AdminDashboard() {
 
     setChartData(processDataForChart(clicks, 'linkId', allClickKeys));
     setTrafficChartData(processDataForChart(trafficSources, 'source', trafficKeys));
-  }, [clicks, trafficSources, dateRange]);
+    processCityData(visits);
+  }, [clicks, trafficSources, visits, dateRange]);
 
 
   const GenericChart = ({
@@ -389,31 +421,69 @@ export default function AdminDashboard() {
     );
   };
   
-  const ClickLog = () => {
+  const VisitLog = () => {
     return (
         <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
             <CardHeader>
-                <CardTitle>Log de Cliques</CardTitle>
+                <CardTitle>Log de Visitas</CardTitle>
                 <CardDescription className="text-gray-400">
-                    Todos os cliques registrados em ordem cronológica.
+                    Todas as visitas ao site em ordem cronológica.
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 <ul className="space-y-4">
-                    {clicks.length > 0 ? clicks.map((click) => (
-                        <li key={click.id} className="flex justify-between items-center text-sm font-medium">
-                            <span className="text-gray-300">{linkIdLabels[click.linkId] || click.linkId}</span>
+                    {visits.length > 0 ? visits.map((visit) => (
+                        <li key={visit.id} className="flex justify-between items-center text-sm font-medium">
+                            <span className="text-gray-300 flex items-center gap-2">
+                                <MapPin className="h-4 w-4" />
+                                {visit.city || 'Desconhecida'}
+                            </span>
                             <span className="text-gray-500 flex items-center gap-2">
                                 <Clock className="h-4 w-4" />
-                                {click.createdAt ? format(click.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
+                                {visit.createdAt ? format(visit.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
                             </span>
                         </li>
                     )) : (
-                        <p className="text-gray-400">Nenhum clique registrado ainda.</p>
+                        <p className="text-gray-400">Nenhuma visita registrada ainda.</p>
                     )}
                 </ul>
             </CardContent>
         </Card>
+    );
+  }
+
+  const TopCitiesCard = () => {
+    return (
+      <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+        <CardHeader>
+          <CardTitle>Top Cidades por Visitas</CardTitle>
+          <CardDescription className="text-gray-400">
+            As cidades que mais visitaram seu site.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+            {topCities.length > 0 ? (
+                 <Table>
+                    <TableHeader>
+                        <TableRow className="border-white/10 hover:bg-transparent">
+                        <TableHead className="text-white">Cidade</TableHead>
+                        <TableHead className="text-right text-white">Visitas</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {topCities.map(({ city, count }) => (
+                        <TableRow key={city} className="border-white/10 hover:bg-white/5">
+                            <TableCell className="font-medium">{city}</TableCell>
+                            <TableCell className="text-right">{count}</TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            ) : (
+                <p className="text-gray-400 text-center">Nenhuma visita registrada ainda.</p>
+            )}
+        </CardContent>
+      </Card>
     );
   }
 
@@ -538,7 +608,7 @@ export default function AdminDashboard() {
   }
 
   const trafficChartConfig = {
-    ...chartConfig, // Reuse existing colors
+    ...chartConfig,
     'WhatsApp': { label: 'WhatsApp', color: 'hsl(var(--chart-1))' },
     'Instagram': { label: 'Instagram', color: 'hsl(var(--chart-2))' },
     'TikTok': { label: 'TikTok', color: 'hsl(var(--chart-3))' },
@@ -587,7 +657,7 @@ export default function AdminDashboard() {
             className="w-full sm:w-auto"
           />
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Total de Visitas"
             value={visits.length}
@@ -602,6 +672,11 @@ export default function AdminDashboard() {
             title="Fontes de Tráfego"
             value={trafficSources.length}
             icon={<Users className="h-4 w-4 text-blue-400" />}
+          />
+          <StatCard
+            title="Cidades Únicas"
+            value={uniqueCitiesCount}
+            icon={<Building className="h-4 w-4 text-orange-400" />}
           />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
@@ -635,7 +710,10 @@ export default function AdminDashboard() {
             />
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <ClickLog />
+          <VisitLog />
+          <TopCitiesCard />
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <TrafficLog />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
