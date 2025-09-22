@@ -271,7 +271,7 @@ export default function AdminDashboard() {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl text-white" align="end">
+              <PopoverContent className="w-auto p-0 bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl" align="end">
                 <Calendar
                   initialFocus
                   mode="range"
@@ -280,15 +280,16 @@ export default function AdminDashboard() {
                   onSelect={setDate}
                   numberOfMonths={2}
                   locale={ptBR}
-                  className="bg-transparent"
-                  classNames={{
-                    day: "text-white hover:bg-white/10",
-                    day_selected: "bg-purple-600 text-white hover:bg-purple-700",
-                    day_today: "bg-white/20 text-white",
-                    day_outside: "text-white/40",
-                    head_cell: "text-white/60",
-                    nav_button: "text-white hover:bg-white/10",
-                    caption_label: "text-white",
+                  className="bg-transparent text-white"
+                   classNames={{
+                    caption: 'text-white',
+                    caption_label: 'text-white',
+                    nav_button: 'text-white hover:bg-white/10',
+                    head_cell: 'text-white/60',
+                    day: 'text-white hover:bg-white/10',
+                    day_selected: 'bg-purple-600 text-white hover:bg-purple-700',
+                    day_today: 'bg-white/20 text-white',
+                    day_outside: 'text-white/40',
                   }}
                 />
               </PopoverContent>
