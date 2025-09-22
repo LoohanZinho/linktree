@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 
 export function VisitTracker() {
   useEffect(() => {
@@ -12,15 +10,14 @@ export function VisitTracker() {
 
       if (lastVisit !== today) {
         try {
-          const visitsCollection = collection(db, 'visits');
-          await addDoc(visitsCollection, {
-            createdAt: serverTimestamp(),
-            city: 'Desconhecida'
-          });
+          // A requisição é enviada para nossa própria API route,
+          // que cuidará de obter o IP e registrar no Firebase.
+          await fetch('/api/track', { method: 'POST' });
 
           localStorage.setItem('lastVisitDate', today);
+          console.log('Visit tracked via API.');
         } catch (error) {
-          console.error("Failed to track visit:", error);
+          console.error("Failed to track visit via API:", error);
         }
       }
     };
