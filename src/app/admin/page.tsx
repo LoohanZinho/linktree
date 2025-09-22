@@ -336,7 +336,6 @@ export default function AdminDashboard() {
               <XAxis
                 dataKey="date"
                 tickLine={false}
-                tickMargin={10}
                 axisLine={false}
                 stroke="rgba(255,255,255,0.7)"
                 interval={0}
