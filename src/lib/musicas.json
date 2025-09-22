@@ -2,24 +2,24 @@
   "musicas": [
     {
       "id": 1,
-      "title": "A Vida é um Rio",
-      "artist": "Rael",
-      "cover": "https://i.imgur.com/examplecover1.jpg",
-      "url": "/musicas/vida-e-um-rio.mp3"
+      "title": "VEI SEI - REPSAJ x SAE, RIN [𝘽𝙍𝘼𝙕𝙄𝙇𝙄𝘼𝙉 𝙁𝙐𝙉𝙆]",
+      "artist": "𝙫𝙞𝙘𝙩𝙤",
+      "cover": "https://i.imgur.com/v0toJZy.png",
+      "url": "/musicas/vei-sei.mp3"
     },
     {
       "id": 2,
-      "title": "Girassol",
-      "artist": "Priscilla Alcantara, Whindersson Nunes",
-      "cover": "https://i.imgur.com/examplecover2.jpg",
-      "url": "/musicas/girassol.mp3"
+      "title": "MANDE MANDE (Ultra Slowed)",
+      "artist": "CHASHKAKEFIRA",
+      "cover": "https://i.imgur.com/vk0JOwF.png",
+      "url": "/musicas/mande-mande.mp3"
     },
     {
       "id": 3,
-      "title": "Céu Azul",
-      "artist": "Charlie Brown Jr.",
-      "cover": "https://i.imgur.com/examplecover3.jpg",
-      "url": "/musicas/ceu-azul.mp3"
+      "title": "𝙈𝙊𝙉𝙏𝘼𝙂𝙀𝙈 𝙉𝙊𝘾𝙃𝙀 - 𝙇𝙐𝙈𝙄𝙓, 𝙆𝙓𝙍𝙎𝙀𝘿 (𝙎𝙪𝙥𝙚𝙧 𝙎𝙡𝙤𝙬𝙚𝙙) 𝙭 𝙊𝙨𝙖𝙧𝙖𝙜𝙞",
+      "artist": "Zemon",
+      "cover": "https://i.imgur.com/cgefdMj.png",
+      "url": "/musicas/montagem-noche.mp3"
     }
   ]
 }
