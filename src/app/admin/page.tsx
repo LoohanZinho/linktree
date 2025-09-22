@@ -27,7 +27,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 // Mock data - replace with your actual data fetching logic
 const mockData = [
@@ -101,34 +101,63 @@ export default function AdminDashboard() {
     }
   }, [date]);
 
-  const ClicksChart = ({ data, title, description, dataKeys }: { data: any[], title: string, description: string, dataKeys: string[] }) => (
-    <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription className="text-gray-400">{description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[250px] w-full">
-          <BarChart data={data} accessibilityLayer>
-            <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.1)" />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              stroke="rgba(255,255,255,0.7)"
-              tickFormatter={(value) => format(new Date(value), 'dd/MM')}
-            />
-            <YAxis stroke="rgba(255,255,255,0.7)" />
-            <ChartTooltip content={<ChartTooltipContent className="bg-black/80 backdrop-blur-md border-white/10 text-white" />} />
-            {dataKeys.map((key) => (
-               <Bar key={key} dataKey={key} fill={chartConfig[key as keyof typeof chartConfig]?.color} radius={4} />
-            ))}
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  );
+  const ClicksChart = ({ data, title, description, dataKeys }: { data: any[], title: string, description: string, dataKeys: string[] }) => {
+    const chartId = React.useId().replace(/:/g, '');
+
+    return (
+      <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription className="text-gray-400">{description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="h-[250px] w-full">
+            <AreaChart data={data} accessibilityLayer>
+              <defs>
+                 {Object.keys(chartConfig).map((key) => {
+                    const color = chartConfig[key as keyof typeof chartConfig]?.color;
+                    if (color) {
+                       return (
+                         <linearGradient key={key} id={`${chartId}-${key}`} x1="0" y1="0" x2="0" y2="1">
+                           <stop offset="5%" stopColor={color} stopOpacity={0.8} />
+                           <stop offset="95%" stopColor={color} stopOpacity={0.1} />
+                         </linearGradient>
+                       );
+                    }
+                    return null;
+                 })}
+              </defs>
+              <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.1)" />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                stroke="rgba(255,255,255,0.7)"
+                tickFormatter={(value) => format(new Date(value), 'dd/MM')}
+              />
+              <YAxis stroke="rgba(255,255,255,0.7)" hide />
+              <ChartTooltip content={<ChartTooltipContent className="bg-black/80 backdrop-blur-md border-white/10 text-white" />} />
+              {dataKeys.map((key) => {
+                 const color = chartConfig[key as keyof typeof chartConfig]?.color;
+                 return (
+                    <Area
+                      key={key}
+                      dataKey={key}
+                      type="monotone"
+                      stroke={color}
+                      fill={`url(#${chartId}-${key})`}
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                 )
+              })}
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="dark flex min-h-screen w-full flex-col text-white">
