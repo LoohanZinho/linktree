@@ -6,6 +6,8 @@ import {
   formatISO,
   startOfDay,
   endOfDay,
+  eachDayOfInterval,
+  subDays,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -161,7 +163,10 @@ const trafficSourceLabels: { [key: string]: string } = {
 };
 
 export default function AdminDashboard() {
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>(undefined);
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: subDays(new Date(), 6),
+    to: new Date(),
+  });
   const [visits, setVisits] = React.useState<Visit[]>([]);
   const [clicks, setClicks] = React.useState<Click[]>([]);
   const [trafficSources, setTrafficSources] = React.useState<TrafficSource[]>([]);
@@ -213,22 +218,45 @@ export default function AdminDashboard() {
   React.useEffect(() => {
     const processDataForChart = (
       sourceData: Array<Click | TrafficSource>,
-      keyField: 'linkId' | 'source'
+      keyField: 'linkId' | 'source',
+      dataKeys: string[]
     ) => {
+      const now = new Date();
+      const from = dateRange?.from || subDays(now, 6);
+      const to = dateRange?.to || now;
+      const interval = eachDayOfInterval({ start: from, end: to });
+
+      // Garante que o intervalo mínimo seja de 7 dias para o gráfico
+      if (interval.length < 7) {
+        const missingDays = 7 - interval.length;
+        const startDate = subDays(interval[0], missingDays);
+        const fullInterval = eachDayOfInterval({ start: startDate, end: interval[interval.length - 1]});
+        interval.splice(0, interval.length, ...fullInterval);
+      }
+      
       const dataByDate: { [date: string]: ChartDataPoint } = {};
+
+      // Inicializa todos os dias do intervalo com 0 para todas as chaves
+      interval.forEach(day => {
+          const itemDate = formatISO(day, { representation: 'date' });
+          dataByDate[itemDate] = { date: itemDate };
+          dataKeys.forEach(key => {
+            dataByDate[itemDate][key] = 0;
+          });
+      });
+
+      // Preenche com os dados existentes
       sourceData.forEach((item) => {
         if (item.createdAt) {
           const itemDate = formatISO(item.createdAt.toDate(), {
             representation: 'date',
           });
-          if (!dataByDate[itemDate]) {
-            dataByDate[itemDate] = { date: itemDate };
+          if (dataByDate[itemDate]) {
+            const key = item[keyField as keyof typeof item] as string;
+            if (dataByDate[itemDate][key] !== undefined) {
+               dataByDate[itemDate][key]++;
+            }
           }
-          const key = item[keyField as keyof typeof item] as string;
-          if (!dataByDate[itemDate][key]) {
-            dataByDate[itemDate][key] = 0;
-          }
-          dataByDate[itemDate][key]++;
         }
       });
       return Object.values(dataByDate).sort(
@@ -236,9 +264,21 @@ export default function AdminDashboard() {
       );
     };
 
-    setChartData(processDataForChart(clicks, 'linkId'));
-    setTrafficChartData(processDataForChart(trafficSources, 'source'));
-  }, [clicks, trafficSources]);
+    const projectKeys = [
+      'gerente-inteligente',
+      'gerente-inteligente-ia',
+      'lucrando-lci',
+      'deposito-aguas-brancas',
+    ];
+    const socialKeys = ['whatsapp', 'instagram', 'tiktok', 'youtube', 'discord'];
+    const trafficKeys = ['WhatsApp', 'Instagram', 'TikTok'];
+
+    const allClickKeys = [...projectKeys, ...socialKeys];
+
+    setChartData(processDataForChart(clicks, 'linkId', allClickKeys));
+    setTrafficChartData(processDataForChart(trafficSources, 'source', trafficKeys));
+  }, [clicks, trafficSources, dateRange]);
+
 
   const GenericChart = ({
     data,
@@ -456,6 +496,29 @@ export default function AdminDashboard() {
     'Instagram': { label: 'Instagram', color: 'hsl(var(--chart-2))' },
     'TikTok': { label: 'TikTok', color: 'hsl(var(--chart-3))' },
   };
+  
+  const projectChartData = chartData.map(item => {
+    const newItem = { date: item.date };
+    const projectKeys = [
+      'gerente-inteligente',
+      'gerente-inteligente-ia',
+      'lucrando-lci',
+      'deposito-aguas-brancas',
+    ];
+    projectKeys.forEach(key => {
+      newItem[key] = item[key] ?? 0;
+    });
+    return newItem;
+  });
+
+  const socialChartData = chartData.map(item => {
+    const newItem = { date: item.date };
+    const socialKeys = ['whatsapp', 'instagram', 'tiktok', 'youtube', 'discord'];
+    socialKeys.forEach(key => {
+      newItem[key] = item[key] ?? 0;
+    });
+    return newItem;
+  });
 
   return (
     <div className="dark relative flex min-h-screen w-full flex-col text-white">
@@ -472,7 +535,7 @@ export default function AdminDashboard() {
             Dashboard de Análise
           </h1>
           <div className="w-full sm:w-auto">
-            <DatePickerWithPresets onDateChange={setDateRange} />
+            <DatePickerWithPresets onDateChange={setDateRange} initialDate={dateRange} />
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -494,14 +557,14 @@ export default function AdminDashboard() {
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
           <GenericChart
-            data={chartData}
+            data={socialChartData}
             title="Cliques nas Redes Sociais"
             description="Total de cliques por dia nos links de redes sociais."
             dataKeys={['whatsapp', 'instagram', 'tiktok', 'youtube', 'discord']}
             chartConfig={chartConfig}
           />
           <GenericChart
-            data={chartData}
+            data={projectChartData}
             title="Cliques nos Projetos"
             description="Total de cliques por dia nos links dos projetos."
             dataKeys={[

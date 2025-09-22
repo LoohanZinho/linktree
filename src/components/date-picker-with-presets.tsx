@@ -18,15 +18,25 @@ import {
 type DatePickerWithPresetsProps = {
     onDateChange: (date: DateRange | undefined) => void;
     className?: string;
+    initialDate?: DateRange;
 }
 
-export function DatePickerWithPresets({ className, onDateChange }: DatePickerWithPresetsProps) {
-  const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+export function DatePickerWithPresets({ className, onDateChange, initialDate }: DatePickerWithPresetsProps) {
+  const [date, setDate] = React.useState<DateRange | undefined>(initialDate);
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    onDateChange(date);
-  }, [date, onDateChange]);
+    if(date !== initialDate) {
+        onDateChange(date);
+    }
+  }, [date, onDateChange, initialDate]);
+  
+  React.useEffect(() => {
+    if(initialDate !== date) {
+      setDate(initialDate)
+    }
+  }, [initialDate, date])
+
 
   const setPreset = (preset: 'today' | 'yesterday' | 'this-week' | 'last-7-days' | 'this-month' | 'last-30-days' | 'all-time') => {
     const now = new Date();
