@@ -27,7 +27,7 @@ import { db } from '@/lib/firebase';
 
 
 export default function Page() {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const projectsContentRef = useRef<HTMLDivElement>(null);
 
@@ -93,10 +93,12 @@ export default function Page() {
 
   const togglePlay = () => {
     if (audioRef.current) {
+      const audio = audioRef.current;
       if (isPlaying) {
-        audioRef.current.pause();
+        audio.pause();
       } else {
-        audioRef.current.play();
+        // Tenta tocar o áudio. Se falhar, o usuário precisa interagir com a página.
+        audio.play().catch(error => console.error("Audio play failed:", error));
       }
       setIsPlaying(!isPlaying);
     }
@@ -284,9 +286,9 @@ export default function Page() {
           )
         )}
       </div>
-      <audio ref={audioRef} autoPlay loop>
+      <audio ref={audioRef} autoPlay loop muted={!isPlaying}>
         <source
-          src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o%2Fcopyright-free-rain-sounds-331497.mp3?alt=media&amp;token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27"
+          src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o%2Fcopyright-free-rain-sounds-331497.mp3?alt=media&token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27"
           type="audio/mpeg"
         />
         Seu navegador não suporta o elemento de áudio.
