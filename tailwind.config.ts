@@ -98,10 +98,10 @@ export default {
             'background-position': 'calc(100% + var(--shimmer-width)) 0',
           },
         },
-        'fade-in-down': {
+        'slide-up-fade-in': {
           '0%': {
             opacity: '0',
-            transform: 'translateY(-10px)',
+            transform: 'translateY(10px)',
           },
           '100%': {
             opacity: '1',
@@ -113,11 +113,12 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         shimmer: 'shimmer 4s infinite',
-        'fade-in-down': 'fade-in-down 0.5s ease-out both',
+        'slide-up-fade-in': 'slide-up-fade-in 0.4s ease-out both',
       },
       animationDelay: {
-        '200': '200ms',
-        '400': '400ms',
+        '150': '150ms',
+        '300': '300ms',
+        '450': '450ms',
         '600': '600ms',
         '800': '800ms',
       }
@@ -127,11 +128,14 @@ export default {
     require('tailwindcss-animate'),
     function ({ addUtilities }: { addUtilities: (utilities: object) => void }) {
       addUtilities({
-        '.animation-delay-200': {
-          'animation-delay': '200ms',
+        '.animation-delay-150': {
+          'animation-delay': '150ms',
         },
-         '.animation-delay-400': {
-          'animation-delay': '400ms',
+         '.animation-delay-300': {
+          'animation-delay': '300ms',
+        },
+        '.animation-delay-450': {
+          'animation-delay': '450ms',
         },
         '.animation-delay-600': {
           'animation-delay': '600ms',

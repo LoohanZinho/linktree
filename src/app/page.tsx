@@ -170,7 +170,7 @@ export default function Page() {
               href="https://gerenteinteligente.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group block animate-fade-in-down"
+              className="group block animate-slide-up-fade-in"
               onClick={() => handleLinkClick('gerente-inteligente')}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
@@ -186,7 +186,8 @@ export default function Page() {
               href="https://gerenteinteligente.online/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group block animate-fade-in-down animation-delay-200"
+              className="group block animate-slide-up-fade-in"
+              style={{ animationDelay: '150ms' }}
               onClick={() => handleLinkClick('gerente-inteligente-ia')}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
@@ -202,8 +203,8 @@ export default function Page() {
               href="https://lucrandolci.netlify.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group block animate-fade-in-down"
-              style={{ animationDelay: '400ms' }}
+              className="group block animate-slide-up-fade-in"
+              style={{ animationDelay: '300ms' }}
               onClick={() => handleLinkClick('lucrando-lci')}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
@@ -219,8 +220,8 @@ export default function Page() {
               href="https://depositoaguasbrancas.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group block animate-fade-in-down"
-              style={{ animationDelay: '600ms' }}
+              className="group block animate-slide-up-fade-in"
+              style={{ animationDelay: '450ms' }}
               onClick={() => handleLinkClick('deposito-aguas-brancas')}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
