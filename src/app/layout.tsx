@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'Lohan Santos',
-  description: 'T',
+  description: 'Todos os links que você procura estão aqui',
 };
 
 export default function RootLayout({

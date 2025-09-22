@@ -24,6 +24,7 @@ import {
   getDocs,
   writeBatch,
   orderBy,
+  where,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useToast } from "@/hooks/use-toast";
@@ -54,6 +55,8 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { DatePickerWithRange } from '@/components/ui/date-picker-with-range';
+import type { DateRange } from 'react-day-picker';
 
 const chartConfig = {
   clicks: {
@@ -158,6 +161,10 @@ const trafficSourceLabels: { [key: string]: string } = {
 };
 
 export default function AdminDashboard() {
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: subDays(new Date(), 6),
+    to: new Date(),
+  });
   const [visits, setVisits] = React.useState<Visit[]>([]);
   const [clicks, setClicks] = React.useState<Click[]>([]);
   const [trafficSources, setTrafficSources] = React.useState<TrafficSource[]>([]);
@@ -167,7 +174,17 @@ export default function AdminDashboard() {
   // Effect to fetch data from Firestore
   React.useEffect(() => {
     const fetchFirestoreData = (collectionName: string, setData: (data: any[]) => void) => {
-      let dataQuery = query(collection(db, collectionName), orderBy('createdAt', 'desc'));
+      let dataQuery = query(collection(db, collectionName));
+      
+      if (dateRange?.from) {
+        dataQuery = query(dataQuery, where('createdAt', '>=', dateRange.from));
+      }
+      if (dateRange?.to) {
+        dataQuery = query(dataQuery, where('createdAt', '<=', dateRange.to));
+      }
+
+      dataQuery = query(dataQuery, orderBy('createdAt', 'desc'));
+
 
       const unsubscribe = onSnapshot(
         dataQuery,
@@ -193,7 +210,7 @@ export default function AdminDashboard() {
       unsubscribeClicks();
       unsubscribeTraffic();
     };
-  }, []);
+  }, [dateRange]);
 
   // Process data for charts
   React.useEffect(() => {
@@ -202,19 +219,14 @@ export default function AdminDashboard() {
       keyField: 'linkId' | 'source',
       dataKeys: string[]
     ) => {
-      if (sourceData.length === 0) {
-        return [];
-      }
-
-      const sortedData = sourceData.sort((a,b) => a.createdAt.toMillis() - b.createdAt.toMillis());
-      const from = sortedData[0].createdAt.toDate();
-      const to = sortedData[sortedData.length - 1].createdAt.toDate();
-
+      const now = new Date();
+      const from = dateRange?.from || subDays(now, 6);
+      const to = dateRange?.to || now;
       let interval = eachDayOfInterval({ start: from, end: to });
       
       const dataByDate: { [date: string]: ChartDataPoint } = {};
 
-      // Inicializa todos os dias do intervalo com 0 para todas as chaves
+      // Initialize all days in the interval with 0 for all keys
       interval.forEach(day => {
           const itemDate = formatISO(day, { representation: 'date' });
           dataByDate[itemDate] = { date: itemDate };
@@ -223,7 +235,7 @@ export default function AdminDashboard() {
           });
       });
 
-      // Preenche com os dados existentes
+      // Populate with existing data
       sourceData.forEach((item) => {
         if (item.createdAt) {
           const itemDate = formatISO(item.createdAt.toDate(), {
@@ -255,7 +267,7 @@ export default function AdminDashboard() {
 
     setChartData(processDataForChart(clicks, 'linkId', allClickKeys));
     setTrafficChartData(processDataForChart(trafficSources, 'source', trafficKeys));
-  }, [clicks, trafficSources]);
+  }, [clicks, trafficSources, dateRange]);
 
 
   const GenericChart = ({
@@ -315,24 +327,22 @@ export default function AdminDashboard() {
                 tickLine={false}
                 axisLine={false}
                 stroke="rgba(255,255,255,0.7)"
-                tickMargin={10}
+                tickMargin={8}
+                interval={Math.floor((data.length -1) / 7)}
                 tickFormatter={(value, index) => {
                     const date = new Date(value);
                     const formattedDate = format(new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000), 'dd/MM');
                     return formattedDate;
                 }}
-                interval={0}
                 tick={(props) => {
                     const { x, y, payload, index } = props;
                     let textAnchor = "middle";
                     let dx = 0;
-                    if (index === 0) {
+                    if (index === 0 && data.length > 1) {
                         textAnchor = "start";
-                        dx = 4;
                     }
-                    if (index === data.length - 1) {
+                    if (index === data.length - 1 && data.length > 1) {
                         textAnchor = "end";
-                        dx = -4;
                     }
 
                     return (
@@ -564,6 +574,11 @@ export default function AdminDashboard() {
           <h1 className="text-2xl font-semibold flex-shrink-0">
             Dashboard de Análise
           </h1>
+          <DatePickerWithRange
+            date={dateRange}
+            onDateChange={setDateRange}
+            className="w-full sm:w-auto"
+          />
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <StatCard
@@ -623,3 +638,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+    
