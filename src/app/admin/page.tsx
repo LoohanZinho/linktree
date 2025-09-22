@@ -6,7 +6,6 @@ import {
   formatISO,
   startOfDay,
   endOfDay,
-  formatDistanceToNow,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -14,6 +13,7 @@ import {
   Trash2,
   Hand,
   Users,
+  Clock,
 } from 'lucide-react';
 import Image from 'next/image';
 import {
@@ -25,7 +25,6 @@ import {
   writeBatch,
   where,
   orderBy,
-  limit,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useToast } from "@/hooks/use-toast";
@@ -172,7 +171,7 @@ export default function AdminDashboard() {
   // Effect to fetch data from Firestore based on date range
   React.useEffect(() => {
     const fetchFirestoreData = (collectionName: string, setData: (data: any[]) => void) => {
-      let dataQuery = query(collection(db, collectionName));
+      let dataQuery = query(collection(db, collectionName), orderBy('createdAt', 'desc'));
 
       // Apply date filtering if a range is selected
       if (dateRange?.from) {
@@ -331,40 +330,23 @@ export default function AdminDashboard() {
     );
   };
   
-  const RecentClicksLog = () => {
-    const [recentClicks, setRecentClicks] = React.useState<Click[]>([]);
-
-    React.useEffect(() => {
-        const q = query(collection(db, 'clicks'), orderBy('createdAt', 'desc'), limit(10));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const clicksData = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            })) as Click[];
-            setRecentClicks(clicksData);
-        });
-
-        return () => unsubscribe();
-    }, []);
-
+  const ClickLog = () => {
     return (
         <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
             <CardHeader>
-                <CardTitle>Cliques Recentes</CardTitle>
+                <CardTitle>Log de Cliques</CardTitle>
                 <CardDescription className="text-gray-400">
-                    Últimos 10 cliques registrados em tempo real.
+                    Todos os cliques registrados em ordem cronológica.
                 </CardDescription>
             </CardHeader>
             <CardContent>
                 <ul className="space-y-4">
-                    {recentClicks.length > 0 ? recentClicks.map((click) => (
+                    {clicks.length > 0 ? clicks.map((click) => (
                         <li key={click.id} className="flex justify-between items-center text-sm font-medium">
-                            <div className="flex items-center gap-2">
-                                <Hand className="h-4 w-4 text-green-400" />
-                                <span className="text-gray-300">{linkIdLabels[click.linkId] || click.linkId}</span>
-                            </div>
-                            <span className="text-gray-500">
-                                {click.createdAt ? formatDistanceToNow(click.createdAt.toDate(), { addSuffix: true, locale: ptBR }) : '...'}
+                            <span className="text-gray-300">{linkIdLabels[click.linkId] || click.linkId}</span>
+                            <span className="text-gray-500 flex items-center gap-2">
+                                <Clock className="h-4 w-4" />
+                                {click.createdAt ? format(click.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
                             </span>
                         </li>
                     )) : (
@@ -531,7 +513,7 @@ export default function AdminDashboard() {
             chartConfig={chartConfig}
           />
         </div>
-         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+         <div className="grid grid-cols-1 gap-6">
             <GenericChart
               data={trafficChartData}
               title="Fontes de Tráfego"
@@ -539,7 +521,9 @@ export default function AdminDashboard() {
               dataKeys={['WhatsApp', 'Instagram', 'TikTok']}
               chartConfig={trafficChartConfig}
             />
-            <RecentClicksLog />
+        </div>
+        <div className="grid grid-cols-1 gap-6">
+          <ClickLog />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
             <DangerousActions />
@@ -548,5 +532,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-    
