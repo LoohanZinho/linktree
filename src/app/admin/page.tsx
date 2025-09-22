@@ -4,6 +4,7 @@ import * as React from 'react';
 import { addDays, format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
+import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -101,24 +102,25 @@ export default function AdminDashboard() {
   }, [date]);
 
   const ClicksChart = ({ data, title, description, dataKeys }: { data: any[], title: string, description: string, dataKeys: string[] }) => (
-    <Card>
+    <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="text-gray-400">{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[250px] w-full">
           <BarChart data={data} accessibilityLayer>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.1)" />
             <XAxis
               dataKey="date"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
+              stroke="rgba(255,255,255,0.7)"
               tickFormatter={(value) => format(new Date(value), 'dd/MM')}
             />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <YAxis stroke="rgba(255,255,255,0.7)" />
+            <ChartTooltip content={<ChartTooltipContent className="bg-black/80 backdrop-blur-md border-white/10 text-white" />} />
             {dataKeys.map((key) => (
                <Bar key={key} dataKey={key} fill={chartConfig[key as keyof typeof chartConfig]?.color} radius={4} />
             ))}
@@ -129,7 +131,15 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
+    <div className="dark flex min-h-screen w-full flex-col text-white">
+       <Image
+        src="https://i.imgur.com/pjSQoR5.gif"
+        alt="Fundo animado"
+        fill
+        className="object-cover -z-10 brightness-50"
+        data-ai-hint="animated background"
+        unoptimized
+      />
       <main className="flex flex-1 flex-col gap-4 p-4 sm:p-6">
         <div className="flex items-center justify-between gap-4">
           <h1 className="text-2xl font-semibold">Dashboard de Cliques</h1>
@@ -140,8 +150,8 @@ export default function AdminDashboard() {
                   id="date"
                   variant={'outline'}
                   className={cn(
-                    'w-[300px] justify-start text-left font-normal',
-                    !date && 'text-muted-foreground'
+                    'w-[300px] justify-start text-left font-normal bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:text-white',
+                    !date && 'text-gray-400'
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
@@ -159,7 +169,7 @@ export default function AdminDashboard() {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="end">
+              <PopoverContent className="w-auto p-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl" align="end">
                 <Calendar
                   initialFocus
                   mode="range"
