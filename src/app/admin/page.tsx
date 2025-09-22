@@ -6,7 +6,9 @@ import {
   formatISO,
   startOfDay,
   endOfDay,
+  formatDistanceToNow,
 } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import {
   Eye,
   Trash2,
@@ -22,6 +24,8 @@ import {
   getDocs,
   writeBatch,
   where,
+  orderBy,
+  limit,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useToast } from "@/hooks/use-toast";
@@ -327,58 +331,50 @@ export default function AdminDashboard() {
     );
   };
   
-  const CountList = ({
-    items,
-    title,
-    description,
-    labels,
-    icon: Icon
-  }: {
-    items: Array<{linkId: string} | {source: string}>,
-    title: string,
-    description: string,
-    labels: {[key: string]: string},
-    icon: React.ElementType
-  }) => {
-      const counts = React.useMemo(() => {
-          const countsMap: { [key: string]: number } = {};
-          for (const key in labels) {
-              countsMap[key] = 0;
-          }
-          items.forEach(item => {
-              const key = 'linkId' in item ? item.linkId : item.source;
-              if (countsMap.hasOwnProperty(key)) {
-                  countsMap[key]++;
-              }
-          });
-          return Object.entries(countsMap).sort(([, a], [, b]) => b - a);
-      }, [items, labels]);
+  const RecentClicksLog = () => {
+    const [recentClicks, setRecentClicks] = React.useState<Click[]>([]);
 
-      return (
-          <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
-              <CardHeader>
-                  <CardTitle>{title}</CardTitle>
-                  <CardDescription className="text-gray-400">{description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                  <ul className="space-y-4">
-                      {counts.length > 0 ? counts.map(([key, count]) => (
-                          <li key={key} className="flex justify-between items-center text-sm font-medium">
-                              <span className="text-gray-300">{labels[key] || key}</span>
-                              <div className="flex items-center gap-2">
-                                  <Icon className="h-4 w-4 text-gray-500" />
-                                  <span className="font-bold text-red-500 w-6 text-right">{count}</span>
-                              </div>
-                          </li>
-                      )) : (
-                          <p className="text-gray-400">Nenhum dado registrado.</p>
-                      )}
-                  </ul>
-              </CardContent>
-          </Card>
-      );
+    React.useEffect(() => {
+        const q = query(collection(db, 'clicks'), orderBy('createdAt', 'desc'), limit(10));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const clicksData = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            })) as Click[];
+            setRecentClicks(clicksData);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    return (
+        <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+            <CardHeader>
+                <CardTitle>Cliques Recentes</CardTitle>
+                <CardDescription className="text-gray-400">
+                    Últimos 10 cliques registrados em tempo real.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ul className="space-y-4">
+                    {recentClicks.length > 0 ? recentClicks.map((click) => (
+                        <li key={click.id} className="flex justify-between items-center text-sm font-medium">
+                            <div className="flex items-center gap-2">
+                                <Hand className="h-4 w-4 text-green-400" />
+                                <span className="text-gray-300">{linkIdLabels[click.linkId] || click.linkId}</span>
+                            </div>
+                            <span className="text-gray-500">
+                                {click.createdAt ? formatDistanceToNow(click.createdAt.toDate(), { addSuffix: true, locale: ptBR }) : '...'}
+                            </span>
+                        </li>
+                    )) : (
+                        <p className="text-gray-400">Nenhum clique registrado ainda.</p>
+                    )}
+                </ul>
+            </CardContent>
+        </Card>
+    );
   }
-
 
   const DangerousActions = () => {
     const { toast } = useToast();
@@ -536,13 +532,6 @@ export default function AdminDashboard() {
           />
         </div>
          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-            <CountList 
-              items={clicks}
-              title="Contagem de Cliques por Link"
-              description="Total de cliques para cada botão no período selecionado."
-              labels={linkIdLabels}
-              icon={Hand}
-            />
             <GenericChart
               data={trafficChartData}
               title="Fontes de Tráfego"
@@ -550,18 +539,14 @@ export default function AdminDashboard() {
               dataKeys={['WhatsApp', 'Instagram', 'TikTok']}
               chartConfig={trafficChartConfig}
             />
+            <RecentClicksLog />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-            <CountList 
-              items={trafficSources}
-              title="Contagem por Fonte de Tráfego"
-              description="Total de visitas de cada fonte no período selecionado."
-              labels={trafficSourceLabels}
-              icon={Users}
-            />
             <DangerousActions />
         </div>
       </main>
     </div>
   );
 }
+
+    
