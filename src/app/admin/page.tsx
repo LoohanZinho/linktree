@@ -221,7 +221,7 @@ export default function AdminDashboard() {
       keyField: 'linkId' | 'source',
       dataKeys: string[]
     ) => {
-      const now = new Date();
+      const now = new date();
       const from = dateRange?.from || subDays(now, 6);
       const to = dateRange?.to || now;
       let interval = eachDayOfInterval({ start: from, end: to });
@@ -341,23 +341,21 @@ export default function AdminDashboard() {
                 interval={0}
                 tickFormatter={(value) => {
                   const date = new Date(value);
-                  // Adiciona o fuso horário UTC para evitar problemas de deslocamento de dia
                   return format(new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000), 'dd/MM');
                 }}
-                ticks={data.map(item => item.date)}
                 tick={(props) => {
-                  const { x, y, payload, index } = props;
-                  let dx = 0;
-                  if (index === 0) dx = -10; // Move a primeira label para a direita
-                  if (index === data.length - 1) dx = 10; // Move a última label para a esquerda
-                  
-                  return (
-                    <g transform={`translate(${x + dx},${y})`}>
-                      <text x={0} y={0} dy={16} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize={12}>
-                        {format(new Date(payload.value.replace(/-/g, '/')), 'dd/MM')}
-                      </text>
-                    </g>
-                  );
+                    const { x, y, payload, index } = props;
+                    let textAnchor = "middle";
+                    if (index === 0) textAnchor = "start";
+                    if (index === data.length - 1) textAnchor = "end";
+
+                    return (
+                        <g transform={`translate(${x},${y})`}>
+                            <text x={0} y={0} dy={16} textAnchor={textAnchor} fill="rgba(255,255,255,0.7)" fontSize={12}>
+                                {format(new Date(payload.value.replace(/-/g, '/')), 'dd/MM')}
+                            </text>
+                        </g>
+                    );
                 }}
               />
               <YAxis stroke="rgba(255,255,255,0.7)" hide />
@@ -642,5 +640,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-    
