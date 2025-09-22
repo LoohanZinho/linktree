@@ -339,6 +339,7 @@ export default function AdminDashboard() {
                 tickMargin={10}
                 axisLine={false}
                 stroke="rgba(255,255,255,0.7)"
+                interval={0}
                 tickFormatter={(value) => {
                   const date = new Date(value);
                   // Adiciona o fuso horário UTC para evitar problemas de deslocamento de dia
