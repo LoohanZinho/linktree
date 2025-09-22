@@ -1,10 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { addDays, format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { addDays, format, startOfDay, endOfDay } from 'date-fns';
+import { Calendar as CalendarIcon, Eye } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -80,11 +82,59 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const StatCard = ({ title, value, icon }: { title: string, value: string | number, icon: React.ReactNode }) => (
+    <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-400">{title}</CardTitle>
+            {icon}
+        </CardHeader>
+        <CardContent>
+            <div className="text-2xl font-bold">{value}</div>
+        </CardContent>
+    </Card>
+);
+
+
 export default function AdminDashboard() {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: addDays(new Date(), -7),
     to: new Date(),
   });
+
+  const [allVisits, setAllVisits] = React.useState<{ id: string; createdAt: { seconds: number } }[]>([]);
+
+  // Effect to fetch visits from Firestore
+  React.useEffect(() => {
+      try {
+        const visitsQuery = query(collection(db, 'visits'), orderBy('createdAt', 'desc'));
+        const unsubscribe = onSnapshot(visitsQuery, (snapshot) => {
+            const visitsData = snapshot.docs.map(doc => ({ id: doc.id, createdAt: doc.data().createdAt as { seconds: number } }));
+            setAllVisits(visitsData);
+        }, (error) => {
+            console.error("Failed to fetch visits:", error);
+            // NOTE: You might want to replace the placeholder in firebase.ts with your actual config.
+            // If you don't have one, ask me to create a firebase project for you.
+        });
+        return () => unsubscribe();
+      } catch (error) {
+        console.error("Error setting up Firestore listener:", error);
+      }
+  }, []);
+
+  // Logic to filter visits based on the date range
+  const filteredVisitsCount = React.useMemo(() => {
+      if (!date?.from) { 
+          return allVisits.length;
+      }
+      const from = startOfDay(date.from);
+      const to = date.to ? endOfDay(date.to) : endOfDay(date.from);
+
+      return allVisits.filter(visit => {
+          if (!visit.createdAt) return false;
+          const visitDate = new Date(visit.createdAt.seconds * 1000);
+          return visitDate >= from && visitDate <= to;
+      }).length;
+  }, [allVisits, date]);
 
   // This will hold the filtered data based on the date range picker
   const [filteredData, setFilteredData] = React.useState(mockData);
@@ -115,7 +165,7 @@ export default function AdminDashboard() {
             <AreaChart data={data} accessibilityLayer>
               <defs>
                  {Object.keys(chartConfig).map((key) => {
-                    const color = chartConfig[key as keyof typeof chartConfig]?.color;
+                    const color = chartConfig[key as key of typeof chartConfig]?.color;
                     if (color) {
                        return (
                          <linearGradient key={key} id={`${chartId}-${key}`} x1="0" y1="0" x2="0" y2="1">
@@ -210,6 +260,9 @@ export default function AdminDashboard() {
               </PopoverContent>
             </Popover>
           </div>
+        </div>
+         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <StatCard title="Visitas no Site" value={filteredVisitsCount} icon={<Eye className="h-4 w-4 text-purple-400" />} />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
            <ClicksChart 
