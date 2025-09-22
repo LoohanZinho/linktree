@@ -234,7 +234,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="dark flex min-h-screen w-full flex-col text-white">
+    <div className="dark relative flex min-h-screen w-full flex-col text-white">
        <Image
         src="https://i.imgur.com/KKZfDtk.jpeg"
         alt="Fundo"
