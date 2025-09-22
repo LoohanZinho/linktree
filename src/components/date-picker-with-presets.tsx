@@ -38,7 +38,7 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
   }, [initialDate, date])
 
 
-  const setPreset = (preset: 'today' | 'yesterday' | 'this-week' | 'last-7-days' | 'this-month' | 'last-30-days' | 'all-time') => {
+  const setPreset = (preset: 'today' | 'yesterday' | 'this-week' | 'last-7-days' | 'this-month' | 'all-time') => {
     const now = new Date();
     switch (preset) {
         case 'today':
@@ -57,9 +57,6 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
         case 'this-month':
              setDate({ from: startOfMonth(now), to: endOfMonth(now) });
             break;
-        case 'last-30-days':
-            setDate({ from: subDays(now, 29), to: now });
-            break;
         case 'all-time':
             setDate(undefined); // undefined signifies "all time"
             break;
@@ -68,7 +65,7 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
   }
 
   const Presets = () => (
-    <div className="flex flex-col space-y-2 pr-4 border-r border-white/10">
+    <div className="flex flex-col space-y-2 md:pr-4 md:border-r md:border-white/10">
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('today')}>Hoje</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('yesterday')}>Ontem</Button>
         <Button variant="ghost" className="justify-start" onClick={() => setPreset('this-week')}>Esta semana</Button>
@@ -105,7 +102,7 @@ export function DatePickerWithPresets({ className, onDateChange, initialDate }: 
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 flex bg-black/80 backdrop-blur-md border-white/10 text-white rounded-2xl" align="end">
+        <PopoverContent className="w-auto p-2 md:p-0 flex flex-col md:flex-row bg-black/80 backdrop-blur-md border-white/10 text-white rounded-2xl" align="end">
             <Presets />
             <Calendar
                 initialFocus
