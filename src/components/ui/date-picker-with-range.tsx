@@ -68,7 +68,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-full sm:w-[300px] justify-start text-left font-normal bg-black/20 border-white/10 hover:bg-black/40 hover:text-white",
+              "w-full sm:w-[300px] justify-start text-left font-normal bg-white/5 backdrop-blur-md border border-white/10 hover:bg-black/40 hover:text-white",
               !date && "text-muted-foreground"
             )}
           >
@@ -87,8 +87,8 @@ export function DatePickerWithRange({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 flex flex-col sm:flex-row bg-black/80 backdrop-blur-md border-white/10 text-white rounded-2xl" align="start">
-           <div className="flex flex-col space-y-2 border-r border-white/10 p-4">
+        <PopoverContent className="w-auto p-0 flex flex-col sm:flex-row bg-transparent border-0 text-white rounded-2xl" align="start">
+           <div className="flex flex-col space-y-2 border-r border-white/10 p-4 bg-white/5 backdrop-blur-md rounded-l-2xl">
                 <Button variant="ghost" onClick={() => handlePreset('today')} className="justify-start">Hoje</Button>
                 <Button variant="ghost" onClick={() => handlePreset('yesterday')} className="justify-start">Ontem</Button>
                 <Button variant="ghost" onClick={() => handlePreset('last7')} className="justify-start">Últimos 7 dias</Button>
@@ -103,6 +103,7 @@ export function DatePickerWithRange({
             selected={date}
             onSelect={onDateChange}
             numberOfMonths={2}
+            className="bg-white/5 backdrop-blur-md border-y border-r border-white/10 rounded-r-2xl"
           />
         </PopoverContent>
       </Popover>
