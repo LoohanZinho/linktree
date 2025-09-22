@@ -4,8 +4,6 @@ import * as React from 'react';
 import {
   format,
   formatISO,
-  startOfDay,
-  endOfDay,
   eachDayOfInterval,
   subDays,
 } from 'date-fns';
@@ -25,12 +23,10 @@ import {
   Timestamp,
   getDocs,
   writeBatch,
-  where,
   orderBy,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useToast } from "@/hooks/use-toast";
-import type { DateRange } from "react-day-picker";
 
 import { Button } from '@/components/ui/button';
 import {
@@ -58,7 +54,6 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { DatePickerWithPresets } from '@/components/date-picker-with-presets';
 
 const chartConfig = {
   clicks: {
@@ -163,30 +158,16 @@ const trafficSourceLabels: { [key: string]: string } = {
 };
 
 export default function AdminDashboard() {
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-    from: subDays(new Date(), 6),
-    to: new Date(),
-  });
   const [visits, setVisits] = React.useState<Visit[]>([]);
   const [clicks, setClicks] = React.useState<Click[]>([]);
   const [trafficSources, setTrafficSources] = React.useState<TrafficSource[]>([]);
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([]);
   const [trafficChartData, setTrafficChartData] = React.useState<ChartDataPoint[]>([]);
 
-  // Effect to fetch data from Firestore based on date range
+  // Effect to fetch data from Firestore
   React.useEffect(() => {
     const fetchFirestoreData = (collectionName: string, setData: (data: any[]) => void) => {
       let dataQuery = query(collection(db, collectionName), orderBy('createdAt', 'desc'));
-
-      // Apply date filtering if a range is selected
-      if (dateRange?.from) {
-        const start = startOfDay(dateRange.from);
-        dataQuery = query(dataQuery, where('createdAt', '>=', start));
-      }
-      if (dateRange?.to) {
-        const end = endOfDay(dateRange.to);
-        dataQuery = query(dataQuery, where('createdAt', '<=', end));
-      }
 
       const unsubscribe = onSnapshot(
         dataQuery,
@@ -212,7 +193,7 @@ export default function AdminDashboard() {
       unsubscribeClicks();
       unsubscribeTraffic();
     };
-  }, [dateRange]);
+  }, []);
 
   // Process data for charts
   React.useEffect(() => {
@@ -221,19 +202,15 @@ export default function AdminDashboard() {
       keyField: 'linkId' | 'source',
       dataKeys: string[]
     ) => {
-      const now = new Date();
-      const from = dateRange?.from || subDays(now, 6);
-      const to = dateRange?.to || now;
-      let interval = eachDayOfInterval({ start: from, end: to });
-
-      // Garante que o intervalo mínimo seja de 7 dias para o gráfico
-      if (interval.length < 7 && interval.length > 0) {
-        const missingDays = 7 - interval.length;
-        const startDate = subDays(interval[0], missingDays);
-        interval = eachDayOfInterval({ start: startDate, end: interval[interval.length - 1]});
-      } else if (interval.length === 0 && from) {
-         interval = eachDayOfInterval({ start: subDays(from, 6), end: from });
+      if (sourceData.length === 0) {
+        return [];
       }
+
+      const sortedData = sourceData.sort((a,b) => a.createdAt.toMillis() - b.createdAt.toMillis());
+      const from = sortedData[0].createdAt.toDate();
+      const to = sortedData[sortedData.length - 1].createdAt.toDate();
+
+      let interval = eachDayOfInterval({ start: from, end: to });
       
       const dataByDate: { [date: string]: ChartDataPoint } = {};
 
@@ -278,7 +255,7 @@ export default function AdminDashboard() {
 
     setChartData(processDataForChart(clicks, 'linkId', allClickKeys));
     setTrafficChartData(processDataForChart(trafficSources, 'source', trafficKeys));
-  }, [clicks, trafficSources, dateRange]);
+  }, [clicks, trafficSources]);
 
 
   const GenericChart = ({
@@ -587,9 +564,6 @@ export default function AdminDashboard() {
           <h1 className="text-2xl font-semibold flex-shrink-0">
             Dashboard de Análise
           </h1>
-          <div className="w-full sm:w-auto">
-            <DatePickerWithPresets onDateChange={setDateRange} date={dateRange} />
-          </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <StatCard

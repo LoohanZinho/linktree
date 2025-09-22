@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'Lohan Santos',
-  description: 'Criado com Firebase Studio',
+  description: 'T',
 };
 
 export default function RootLayout({
