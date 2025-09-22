@@ -588,7 +588,7 @@ export default function AdminDashboard() {
             Dashboard de Análise
           </h1>
           <div className="w-full sm:w-auto">
-            <DatePickerWithPresets onDateChange={setDateRange} initialDate={dateRange} />
+            <DatePickerWithPresets onDateChange={setDateRange} date={dateRange} />
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
