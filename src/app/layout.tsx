@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { VisitTracker } from '@/components/VisitTracker';
-import { LenisProvider } from '@/components/LenisProvider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -20,11 +19,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.variable} font-sans`}>
-        <LenisProvider>
-          <VisitTracker />
-          {children}
-          <Toaster />
-        </LenisProvider>
+        <VisitTracker />
+        {children}
+        <Toaster />
       </body>
     </html>
   );
