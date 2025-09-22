@@ -1,0 +1,25 @@
+{
+  "musicas": [
+    {
+      "id": 1,
+      "title": "A Vida é um Rio",
+      "artist": "Rael",
+      "cover": "https://i.imgur.com/examplecover1.jpg",
+      "url": "/musicas/vida-e-um-rio.mp3"
+    },
+    {
+      "id": 2,
+      "title": "Girassol",
+      "artist": "Priscilla Alcantara, Whindersson Nunes",
+      "cover": "https://i.imgur.com/examplecover2.jpg",
+      "url": "/musicas/girassol.mp3"
+    },
+    {
+      "id": 3,
+      "title": "Céu Azul",
+      "artist": "Charlie Brown Jr.",
+      "cover": "https://i.imgur.com/examplecover3.jpg",
+      "url": "/musicas/ceu-azul.mp3"
+    }
+  ]
+}

@@ -4,8 +4,6 @@ import Image from 'next/image';
 import {
   Instagram,
   Youtube,
-  Volume2,
-  VolumeX,
   ChevronDown,
   Coins,
   Brain,
@@ -24,18 +22,11 @@ import { DiscordPopup } from '@/components/discord-popup';
 import { Separator } from '@/components/ui/separator';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import MusicPlayer from '@/components/MusicPlayer';
 
 
 export default function Page() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
   const projectsContentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.4;
-    }
-  }, []);
 
   const handleLinkClick = async (linkId: string) => {
     if (!linkId) {
@@ -90,19 +81,6 @@ export default function Page() {
       isExternal: false,
     },
   ];
-
-  const togglePlay = () => {
-    if (audioRef.current) {
-      const audio = audioRef.current;
-      if (isPlaying) {
-        audio.pause();
-      } else {
-        // Tenta tocar o áudio. Se falhar, o usuário precisa interagir com a página.
-        audio.play().catch(error => console.error("Audio play failed:", error));
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   const handleProjectsOpen = (isOpen: boolean) => {
     if (isOpen) {
@@ -295,24 +273,9 @@ export default function Page() {
           )
         )}
       </div>
-      <audio ref={audioRef} autoPlay loop muted={!isPlaying}>
-        <source
-          src="https://firebasestorage.googleapis.com/v0/b/agente-de-ia-n4f3c.firebasestorage.app/o%2Fcopyright-free-rain-sounds-331497.mp3?alt=media&token=dd96c4d6-a38b-4eb9-9f0a-55fb9dcc4b27"
-          type="audio/mpeg"
-        />
-        Seu navegador não suporta o elemento de áudio.
-      </audio>
-      <button
-        onClick={togglePlay}
-        className="absolute bottom-4 right-4 text-white p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors duration-300"
-        aria-label="Toggle sound"
-      >
-        {isPlaying ? (
-          <Volume2 className="h-6 w-6" />
-        ) : (
-          <VolumeX className="h-6 w-6" />
-        )}
-      </button>
+      <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 w-auto max-w-sm sm:w-80 animate-slide-up-fade-in animation-delay-800">
+         <MusicPlayer />
+      </div>
     </main>
   );
 }
