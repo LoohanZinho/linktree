@@ -157,9 +157,9 @@ const linkIdLabels: { [key: string]: string } = {
 };
 
 const trafficSourceLabels: { [key: string]: string } = {
-    'zap': 'WhatsApp',
-    'insta': 'Instagram',
-    'ttk': 'TikTok',
+    'WhatsApp': 'WhatsApp',
+    'Instagram': 'Instagram',
+    'TikTok': 'TikTok',
 };
 
 export default function AdminDashboard() {
@@ -224,14 +224,15 @@ export default function AdminDashboard() {
       const now = new Date();
       const from = dateRange?.from || subDays(now, 6);
       const to = dateRange?.to || now;
-      const interval = eachDayOfInterval({ start: from, end: to });
+      let interval = eachDayOfInterval({ start: from, end: to });
 
       // Garante que o intervalo mínimo seja de 7 dias para o gráfico
-      if (interval.length < 7) {
+      if (interval.length < 7 && interval.length > 0) {
         const missingDays = 7 - interval.length;
         const startDate = subDays(interval[0], missingDays);
-        const fullInterval = eachDayOfInterval({ start: startDate, end: interval[interval.length - 1]});
-        interval.splice(0, interval.length, ...fullInterval);
+        interval = eachDayOfInterval({ start: startDate, end: interval[interval.length - 1]});
+      } else if (interval.length === 0 && from) {
+         interval = eachDayOfInterval({ start: subDays(from, 6), end: from });
       }
       
       const dataByDate: { [date: string]: ChartDataPoint } = {};
@@ -391,6 +392,34 @@ export default function AdminDashboard() {
                         </li>
                     )) : (
                         <p className="text-gray-400">Nenhum clique registrado ainda.</p>
+                    )}
+                </ul>
+            </CardContent>
+        </Card>
+    );
+  }
+
+  const TrafficLog = () => {
+    return (
+        <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+            <CardHeader>
+                <CardTitle>Log de Fontes de Tráfego</CardTitle>
+                <CardDescription className="text-gray-400">
+                    Todas as fontes de tráfego registradas em ordem cronológica.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ul className="space-y-4">
+                    {trafficSources.length > 0 ? trafficSources.map((source) => (
+                        <li key={source.id} className="flex justify-between items-center text-sm font-medium">
+                            <span className="text-gray-300">{trafficSourceLabels[source.source] || source.source}</span>
+                            <span className="text-gray-500 flex items-center gap-2">
+                                <Clock className="h-4 w-4" />
+                                {source.createdAt ? format(source.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
+                            </span>
+                        </li>
+                    )) : (
+                        <p className="text-gray-400">Nenhuma fonte de tráfego registrada ainda.</p>
                     )}
                 </ul>
             </CardContent>
@@ -585,8 +614,9 @@ export default function AdminDashboard() {
               chartConfig={trafficChartConfig}
             />
         </div>
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <ClickLog />
+          <TrafficLog />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
             <DangerousActions />
@@ -595,3 +625,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+    
