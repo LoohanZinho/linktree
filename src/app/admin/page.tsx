@@ -6,6 +6,8 @@ import {
   formatISO,
   eachDayOfInterval,
   subDays,
+  startOfDay,
+  endOfDay,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -177,10 +179,10 @@ export default function AdminDashboard() {
       let dataQuery = query(collection(db, collectionName));
       
       if (dateRange?.from) {
-        dataQuery = query(dataQuery, where('createdAt', '>=', dateRange.from));
+        dataQuery = query(dataQuery, where('createdAt', '>=', startOfDay(dateRange.from)));
       }
       if (dateRange?.to) {
-        dataQuery = query(dataQuery, where('createdAt', '<=', dateRange.to));
+        dataQuery = query(dataQuery, where('createdAt', '<=', endOfDay(dateRange.to)));
       }
 
       dataQuery = query(dataQuery, orderBy('createdAt', 'desc'));
@@ -222,7 +224,12 @@ export default function AdminDashboard() {
       const now = new Date();
       const from = dateRange?.from || subDays(now, 6);
       const to = dateRange?.to || now;
-      let interval = eachDayOfInterval({ start: from, end: to });
+      let interval;
+      try {
+        interval = eachDayOfInterval({ start: from, end: to });
+      } catch (error) {
+        interval = [from];
+      }
       
       const dataByDate: { [date: string]: ChartDataPoint } = {};
 
@@ -638,5 +645,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-    

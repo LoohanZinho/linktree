@@ -7,7 +7,7 @@ import { VisitTracker } from '@/components/VisitTracker';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'Lohan Santos',
+  title: 'Lohan Santos - Links',
   description: 'Todos os links que você procura estão aqui',
 };
 
