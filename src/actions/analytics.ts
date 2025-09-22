@@ -18,3 +18,23 @@ export async function logVisit(): Promise<void> {
     // Não relançamos o erro para não quebrar a experiência do usuário se o rastreamento falhar.
   }
 }
+
+/**
+ * Registra o clique em um link específico no Firestore.
+ * @param linkId Um identificador único para o link que foi clicado (ex: 'whatsapp', 'gerente-inteligente').
+ */
+export async function logClick(linkId: string): Promise<void> {
+  if (!linkId) {
+    console.error("logClick failed: linkId is missing.");
+    return;
+  }
+  try {
+    const clicksCollection = collection(db, "clicks");
+    await addDoc(clicksCollection, {
+      linkId: linkId,
+      createdAt: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error(`Failed to log click for ${linkId}:`, error);
+  }
+}

@@ -1,12 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { addDays, format, startOfDay, endOfDay } from 'date-fns';
+import { addDays, format, startOfDay, endOfDay, formatISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar as CalendarIcon, Eye } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, where, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 import { cn } from '@/lib/utils';
@@ -32,14 +32,6 @@ import {
 } from '@/components/ui/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
-// Mock data - replace with your actual data fetching logic
-const mockData = [
-  { date: '2024-07-01', whatsapp: 12, instagram: 20, 'gerente-inteligente': 8 },
-  { date: '2024-07-02', whatsapp: 15, instagram: 25, 'lucrando-lci': 10 },
-  { date: '2024-07-03', whatsapp: 8, tiktok: 30, 'deposito-aguas-brancas': 5 },
-  { date: '2024-07-04', instagram: 22, youtube: 18, 'gerente-inteligente': 12 },
-  { date: '2024-07-05', whatsapp: 18, discord: 5, 'lucrando-lci': 15 },
-];
 
 const chartConfig = {
   clicks: {
@@ -95,6 +87,21 @@ const StatCard = ({ title, value, icon }: { title: string, value: string | numbe
     </Card>
 );
 
+type Click = {
+  id: string;
+  linkId: string;
+  createdAt: Timestamp;
+};
+
+type Visit = {
+    id: string;
+    createdAt: Timestamp;
+};
+
+type ChartDataPoint = {
+  date: string;
+  [key: string]: any;
+};
 
 export default function AdminDashboard() {
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -102,55 +109,70 @@ export default function AdminDashboard() {
     to: new Date(),
   });
 
-  const [allVisits, setAllVisits] = React.useState<{ id: string; createdAt: { seconds: number } }[]>([]);
+  const [allVisits, setAllVisits] = React.useState<Visit[]>([]);
+  const [allClicks, setAllClicks] = React.useState<Click[]>([]);
+  const [chartData, setChartData] = React.useState<ChartDataPoint[]>([]);
 
-  // Effect to fetch visits from Firestore
+  // Effect to fetch visits and clicks from Firestore
   React.useEffect(() => {
-      try {
-        const visitsQuery = query(collection(db, 'visits'), orderBy('createdAt', 'desc'));
-        const unsubscribe = onSnapshot(visitsQuery, (snapshot) => {
-            const visitsData = snapshot.docs.map(doc => ({ id: doc.id, createdAt: doc.data().createdAt as { seconds: number } }));
-            setAllVisits(visitsData);
-        }, (error) => {
-            console.error("Failed to fetch visits:", error);
-            // NOTE: You might want to replace the placeholder in firebase.ts with your actual config.
-            // If you don't have one, ask me to create a firebase project for you.
-        });
-        return () => unsubscribe();
-      } catch (error) {
-        console.error("Error setting up Firestore listener:", error);
-      }
-  }, []);
+    try {
+      const fromDate = date?.from ? startOfDay(date.from) : undefined;
+      const toDate = date?.to ? endOfDay(date.to) : undefined;
 
-  // Logic to filter visits based on the date range
-  const filteredVisitsCount = React.useMemo(() => {
-      if (!date?.from) { 
-          return allVisits.length;
-      }
-      const from = startOfDay(date.from);
-      const to = date.to ? endOfDay(date.to) : endOfDay(date.from);
-
-      return allVisits.filter(visit => {
-          if (!visit.createdAt) return false;
-          const visitDate = new Date(visit.createdAt.seconds * 1000);
-          return visitDate >= from && visitDate <= to;
-      }).length;
-  }, [allVisits, date]);
-
-  // This will hold the filtered data based on the date range picker
-  const [filteredData, setFilteredData] = React.useState(mockData);
-
-  React.useEffect(() => {
-    // TODO: Fetch data from your backend based on the date range
-    // For now, we'll just filter the mock data
-    if (date?.from && date?.to) {
-      const filtered = mockData.filter((item) => {
-        const itemDate = new Date(item.date);
-        return itemDate >= date.from! && itemDate <= date.to!;
+      // Fetch Visits
+      const visitsQuery = fromDate
+        ? query(collection(db, 'visits'), where('createdAt', '>=', fromDate), where('createdAt', '<=', toDate || new Date()))
+        : query(collection(db, 'visits'), orderBy('createdAt', 'desc'));
+      
+      const unsubscribeVisits = onSnapshot(visitsQuery, (snapshot) => {
+        const visitsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Visit));
+        setAllVisits(visitsData);
+      }, (error) => {
+        console.error("Failed to fetch visits:", error);
       });
-      setFilteredData(filtered);
+
+      // Fetch Clicks
+      const clicksQuery = fromDate
+        ? query(collection(db, 'clicks'), where('createdAt', '>=', fromDate), where('createdAt', '<=', toDate || new Date()))
+        : query(collection(db, 'clicks'), orderBy('createdAt', 'desc'));
+
+      const unsubscribeClicks = onSnapshot(clicksQuery, (snapshot) => {
+        const clicksData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Click));
+        setAllClicks(clicksData);
+      }, (error) => {
+        console.error("Failed to fetch clicks:", error);
+      });
+
+      return () => {
+        unsubscribeVisits();
+        unsubscribeClicks();
+      };
+    } catch (error) {
+      console.error("Error setting up Firestore listener:", error);
     }
   }, [date]);
+
+  // Process data for charts
+  React.useEffect(() => {
+    const dataByDate: { [date: string]: ChartDataPoint } = {};
+
+    allClicks.forEach(click => {
+        if (click.createdAt) {
+            const clickDate = formatISO(click.createdAt.toDate(), { representation: 'date' });
+            if (!dataByDate[clickDate]) {
+                dataByDate[clickDate] = { date: clickDate };
+            }
+            if (!dataByDate[clickDate][click.linkId]) {
+                dataByDate[clickDate][click.linkId] = 0;
+            }
+            dataByDate[clickDate][click.linkId]++;
+        }
+    });
+
+    const sortedData = Object.values(dataByDate).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    setChartData(sortedData);
+
+  }, [allClicks]);
 
   const ClicksChart = ({ data, title, description, dataKeys }: { data: any[], title: string, description: string, dataKeys: string[] }) => {
     const chartId = React.useId().replace(/:/g, '');
@@ -185,7 +207,7 @@ export default function AdminDashboard() {
                 tickMargin={10}
                 axisLine={false}
                 stroke="rgba(255,255,255,0.7)"
-                tickFormatter={(value) => format(new Date(value), 'dd/MM')}
+                tickFormatter={(value) => format(new Date(value), 'dd/MM', { timeZone: 'UTC' })}
               />
               <YAxis stroke="rgba(255,255,255,0.7)" hide />
               <ChartTooltip content={<ChartTooltipContent className="bg-black/80 backdrop-blur-md border-white/10 text-white" />} />
@@ -200,6 +222,7 @@ export default function AdminDashboard() {
                       fill={`url(#${chartId}-${key})`}
                       strokeWidth={2}
                       dot={false}
+                      stackId="1"
                     />
                  )
               })}
@@ -248,7 +271,7 @@ export default function AdminDashboard() {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl text-white" align="end">
+              <PopoverContent className="w-auto p-0 bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl text-white" align="end">
                 <Calendar
                   initialFocus
                   mode="range"
@@ -257,23 +280,33 @@ export default function AdminDashboard() {
                   onSelect={setDate}
                   numberOfMonths={2}
                   locale={ptBR}
+                  className="bg-transparent"
+                  classNames={{
+                    day: "text-white hover:bg-white/10",
+                    day_selected: "bg-purple-600 text-white hover:bg-purple-700",
+                    day_today: "bg-white/20 text-white",
+                    day_outside: "text-white/40",
+                    head_cell: "text-white/60",
+                    nav_button: "text-white hover:bg-white/10",
+                    caption_label: "text-white",
+                  }}
                 />
               </PopoverContent>
             </Popover>
           </div>
         </div>
          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <StatCard title="Visitas no Site" value={filteredVisitsCount} icon={<Eye className="h-4 w-4 text-purple-400" />} />
+            <StatCard title="Visitas no Período" value={allVisits.length} icon={<Eye className="h-4 w-4 text-purple-400" />} />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
            <ClicksChart 
-             data={filteredData}
+             data={chartData}
              title="Cliques nas Redes Sociais"
              description="Total de cliques por dia nos links de redes sociais."
              dataKeys={['whatsapp', 'instagram', 'tiktok', 'youtube', 'discord']}
            />
            <ClicksChart 
-             data={filteredData}
+             data={chartData}
              title="Cliques nos Projetos"
              description="Total de cliques por dia nos links dos projetos."
              dataKeys={['gerente-inteligente', 'gerente-inteligente-ia', 'lucrando-lci', 'deposito-aguas-brancas']}

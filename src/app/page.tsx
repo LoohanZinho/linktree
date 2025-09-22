@@ -9,7 +9,6 @@ import {
   ChevronDown,
   Coins,
   Brain,
-  UsersRound,
   DollarSign,
   Building,
 } from 'lucide-react';
@@ -23,6 +22,7 @@ import {
 } from '@/components/ui/collapsible';
 import { DiscordPopup } from '@/components/discord-popup';
 import { Separator } from '@/components/ui/separator';
+import { logClick } from '@/actions/analytics';
 
 export default function Page() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -35,33 +35,42 @@ export default function Page() {
     }
   }, []);
 
+  const handleLinkClick = (linkId: string) => {
+    logClick(linkId);
+  };
+
   const socialLinks = [
     {
       name: 'WhatsApp',
+      id: 'whatsapp',
       url: 'https://wa.me/91981588512',
       icon: <FaWhatsapp className="h-6 w-6" />,
       isExternal: true,
     },
     {
       name: 'Instagram',
+      id: 'instagram',
       url: 'https://www.instagram.com/loohansb/',
       icon: <Instagram className="h-6 w-6" />,
       isExternal: true,
     },
     {
       name: 'TikTok',
+      id: 'tiktok',
       url: 'https://www.tiktok.com/@loohansb',
       icon: <AiOutlineTikTok className="h-6 w-6" />,
       isExternal: true,
     },
     {
       name: 'YouTube',
+      id: 'youtube',
       url: 'https://www.youtube.com/@LzOfSeven',
       icon: <Youtube className="h-6 w-6" />,
       isExternal: true,
     },
     {
       name: 'Discord',
+      id: 'discord',
       url: 'lzofseven',
       icon: <FaDiscord className="h-6 w-6" />,
       isExternal: false,
@@ -146,13 +155,14 @@ export default function Page() {
               target="_blank"
               rel="noopener noreferrer"
               className="group block animate-fade-in-down"
+              onClick={() => handleLinkClick('gerente-inteligente')}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
                 <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
                 <div className="relative z-10 flex items-center justify-center gap-3">
                   <Coins className="h-6 w-6" />
-                  Gerente Inteligente Financeiro
+                  Gerente Inteligente
                 </div>
               </button>
             </a>
@@ -161,6 +171,7 @@ export default function Page() {
               target="_blank"
               rel="noopener noreferrer"
               className="group block animate-fade-in-down animation-delay-200"
+              onClick={() => handleLinkClick('gerente-inteligente-ia')}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
@@ -177,6 +188,7 @@ export default function Page() {
               rel="noopener noreferrer"
               className="group block animate-fade-in-down"
               style={{ animationDelay: '400ms' }}
+              onClick={() => handleLinkClick('lucrando-lci')}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
@@ -193,6 +205,7 @@ export default function Page() {
               rel="noopener noreferrer"
               className="group block animate-fade-in-down"
               style={{ animationDelay: '600ms' }}
+              onClick={() => handleLinkClick('deposito-aguas-brancas')}
             >
               <button className="relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                 <div className="absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40"></div>
@@ -216,6 +229,7 @@ export default function Page() {
               target="_blank"
               rel="noopener noreferrer"
               className="group block"
+              onClick={() => handleLinkClick(link.id)}
             >
               <button
                 className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
@@ -234,23 +248,25 @@ export default function Page() {
               </button>
             </a>
           ) : (
-            <DiscordPopup key={link.name} username={link.url}>
-              <button
-                className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
-              >
-                <div
-                  className={`absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
-                ></div>
-                <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
-                <div
-                  className={`absolute inset-0 z-0 bg-gradient-to-br opacity-80`}
-                ></div>
-                <div className="relative z-10 flex items-center justify-center gap-3">
-                  {link.icon}
-                  {link.name}
-                </div>
-              </button>
-            </DiscordPopup>
+            <div key={link.name} onClick={() => handleLinkClick(link.id)}>
+              <DiscordPopup username={link.url}>
+                <button
+                  className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
+                >
+                  <div
+                    className={`absolute inset-0 z-0 bg-gradient-to-br from-gray-500/50 to-gray-800/50 opacity-20 blur-2xl transition-opacity duration-300 group-hover:opacity-40`}
+                  ></div>
+                  <div className="absolute inset-0 z-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl"></div>
+                  <div
+                    className={`absolute inset-0 z-0 bg-gradient-to-br opacity-80`}
+                  ></div>
+                  <div className="relative z-10 flex items-center justify-center gap-3">
+                    {link.icon}
+                    {link.name}
+                  </div>
+                </button>
+              </DiscordPopup>
+            </div>
           )
         )}
       </div>
