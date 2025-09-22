@@ -306,7 +306,7 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[250px] w-full">
-            <AreaChart data={data} accessibilityLayer>
+            <AreaChart data={data} accessibilityLayer margin={{ left: 10, right: 10 }}>
               <defs>
                 {Object.keys(chartConfig).map((key) => {
                   const color =
