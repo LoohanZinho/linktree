@@ -4,6 +4,8 @@ import * as React from 'react';
 import {
   format,
   formatISO,
+  startOfDay,
+  endOfDay,
 } from 'date-fns';
 import {
   Eye,
@@ -18,11 +20,11 @@ import {
   Timestamp,
   getDocs,
   writeBatch,
-  addDoc,
-  serverTimestamp,
+  where,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
+import type { DateRange } from "react-day-picker";
 
 import { Button } from '@/components/ui/button';
 import {
@@ -50,6 +52,7 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { DatePickerWithPresets } from '@/components/date-picker-with-presets';
 
 const chartConfig = {
   clicks: {
@@ -142,59 +145,55 @@ const linkIdLabels: { [key: string]: string } = {
 };
 
 export default function AdminDashboard() {
-  const [allVisits, setAllVisits] = React.useState<Visit[]>([]);
-  const [allClicks, setAllClicks] = React.useState<Click[]>([]);
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>(undefined);
+  const [visits, setVisits] = React.useState<Visit[]>([]);
+  const [clicks, setClicks] = React.useState<Click[]>([]);
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([]);
 
-  // Effect to fetch visits and clicks from Firestore
+  // Effect to fetch visits and clicks from Firestore based on date range
   React.useEffect(() => {
-    try {
-      // Fetch Visits
-      const visitsQuery = query(collection(db, 'visits'));
+    const fetchFirestoreData = (collectionName: string, setData: (data: any[]) => void) => {
+      let dataQuery = query(collection(db, collectionName));
 
-      const unsubscribeVisits = onSnapshot(
-        visitsQuery,
+      // Apply date filtering if a range is selected
+      if (dateRange?.from) {
+        const start = startOfDay(dateRange.from);
+        dataQuery = query(dataQuery, where('createdAt', '>=', start));
+      }
+      if (dateRange?.to) {
+        const end = endOfDay(dateRange.to);
+        dataQuery = query(dataQuery, where('createdAt', '<=', end));
+      }
+
+      const unsubscribe = onSnapshot(
+        dataQuery,
         (snapshot) => {
-          const visitsData = snapshot.docs.map(
-            (doc) => ({ id: doc.id, ...doc.data() } as Visit)
+          const data = snapshot.docs.map(
+            (doc) => ({ id: doc.id, ...doc.data() })
           );
-          setAllVisits(visitsData);
+          setData(data);
         },
         (error) => {
-          console.error('Failed to fetch visits:', error);
+          console.error(`Failed to fetch ${collectionName}:`, error);
         }
       );
+      return unsubscribe;
+    };
 
-      // Fetch Clicks for Charts
-      const clicksQuery = query(collection(db, 'clicks'));
+    const unsubscribeVisits = fetchFirestoreData('visits', setVisits);
+    const unsubscribeClicks = fetchFirestoreData('clicks', setClicks);
 
-      const unsubscribeClicks = onSnapshot(
-        clicksQuery,
-        (snapshot) => {
-          const clicksData = snapshot.docs.map(
-            (doc) => ({ id: doc.id, ...doc.data() } as Click)
-          );
-          setAllClicks(clicksData);
-        },
-        (error) => {
-          console.error('Failed to fetch clicks:', error);
-        }
-      );
-
-      return () => {
-        unsubscribeVisits();
-        unsubscribeClicks();
-      };
-    } catch (error) {
-      console.error('Error setting up Firestore listener:', error);
-    }
-  }, []);
+    return () => {
+      unsubscribeVisits();
+      unsubscribeClicks();
+    };
+  }, [dateRange]);
 
   // Process data for charts
   React.useEffect(() => {
     const dataByDate: { [date: string]: ChartDataPoint } = {};
 
-    allClicks.forEach((click) => {
+    clicks.forEach((click) => {
       if (click.createdAt) {
         const clickDate = formatISO(click.createdAt.toDate(), {
           representation: 'date',
@@ -213,7 +212,7 @@ export default function AdminDashboard() {
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
     setChartData(sortedData);
-  }, [allClicks]);
+  }, [clicks]);
 
   const ClicksChart = ({
     data,
@@ -322,7 +321,7 @@ export default function AdminDashboard() {
             <CardHeader>
                 <CardTitle>Contagem de Cliques por Link</CardTitle>
                 <CardDescription className="text-gray-400">
-                    Total de cliques registrados para cada botão.
+                    Total de cliques para cada botão no período selecionado.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -453,16 +452,19 @@ export default function AdminDashboard() {
           <h1 className="text-2xl font-semibold flex-shrink-0">
             Dashboard de Cliques
           </h1>
+          <div className="w-full sm:w-auto">
+            <DatePickerWithPresets onDateChange={setDateRange} />
+          </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Total de Visitas"
-            value={allVisits.length}
+            value={visits.length}
             icon={<Eye className="h-4 w-4 text-purple-400" />}
           />
            <StatCard
             title="Total de Cliques"
-            value={allClicks.length}
+            value={clicks.length}
             icon={<Hand className="h-4 w-4 text-green-400" />}
           />
         </div>
@@ -486,7 +488,7 @@ export default function AdminDashboard() {
           />
         </div>
          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-            <ClickCountList clicks={allClicks} />
+            <ClickCountList clicks={clicks} />
             <DangerousActions />
         </div>
       </main>
