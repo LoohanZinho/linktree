@@ -18,6 +18,7 @@ import {
   Clock,
   MapPin,
   Building,
+  MousePointerClick,
 } from 'lucide-react';
 import Image from 'next/image';
 import {
@@ -452,6 +453,37 @@ export default function AdminDashboard() {
     );
   }
 
+    const ClickLog = () => {
+    return (
+        <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+            <CardHeader>
+                <CardTitle>Log de Cliques</CardTitle>
+                <CardDescription className="text-gray-400">
+                    Todos os cliques registrados em ordem cronológica.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ul className="space-y-4">
+                    {clicks.length > 0 ? clicks.map((click) => (
+                        <li key={click.id} className="flex justify-between items-center text-sm font-medium">
+                            <span className="text-gray-300 flex items-center gap-2">
+                                <MousePointerClick className="h-4 w-4" />
+                                {linkIdLabels[click.linkId] || click.linkId}
+                            </span>
+                            <span className="text-gray-500 flex items-center gap-2">
+                                <Clock className="h-4 w-4" />
+                                {click.createdAt ? format(click.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
+                            </span>
+                        </li>
+                    )) : (
+                        <p className="text-gray-400">Nenhum clique registrado ainda.</p>
+                    )}
+                </ul>
+            </CardContent>
+        </Card>
+    );
+  }
+
   const TopCitiesCard = () => {
     return (
       <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
@@ -715,6 +747,7 @@ export default function AdminDashboard() {
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <TrafficLog />
+          <ClickLog />
         </div>
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
             <DangerousActions />
