@@ -20,9 +20,10 @@ import { FaDiscord } from 'react-icons/fa6';
 type DiscordPopupProps = {
   username: string;
   children: React.ReactNode;
+  onOpen?: () => void;
 };
 
-export function DiscordPopup({ username, children }: DiscordPopupProps) {
+export function DiscordPopup({ username, children, onOpen }: DiscordPopupProps) {
   const { toast } = useToast();
 
   const copyToClipboard = (text: string) => {
@@ -33,9 +34,15 @@ export function DiscordPopup({ username, children }: DiscordPopupProps) {
     });
   };
 
+  const handleTriggerClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (onOpen) {
+      onOpen();
+    }
+  }
+
   return (
     <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger asChild onClick={handleTriggerClick}>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">

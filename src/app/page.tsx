@@ -248,11 +248,11 @@ export default function Page() {
               </button>
             </a>
           ) : (
-            <div key={link.name} onClick={() => handleLinkClick(link.id)} 
+            <div key={link.name}
               className="animate-slide-up-fade-in"
               style={{ animationDelay: `${450 + (index + 1) * 150}ms` }}
             >
-              <DiscordPopup username={link.url}>
+              <DiscordPopup username={link.url} onOpen={() => handleLinkClick(link.id)}>
                 <button
                   className={`relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl p-3 sm:p-4 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95`}
                 >
