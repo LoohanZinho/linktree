@@ -370,7 +370,7 @@ export default function AdminDashboard() {
             config={chartConfig}
             className="w-full h-[180px] sm:h-[220px] md:h-[250px]"
           >
-            <AreaChart data={data} accessibilityLayer margin={{ left: isMobile ? -20 : 0, right: 12, top: 4, bottom: 0 }} >
+            <AreaChart data={data} accessibilityLayer>
               <defs>
                 {Object.keys(chartConfig).map((key) => {
                   const color =
