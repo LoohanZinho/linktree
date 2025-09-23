@@ -13,25 +13,31 @@ export function VisitTracker() {
       if (lastVisit !== today) {
         try {
           let city = 'Desconhecida';
+          let region = 'N/A';
+          let ip = 'N/A';
+
           try {
-            // Usar uma API de geolocalização confiável no lado do cliente.
-            // Se falhar, a cidade continuará como 'Desconhecida', mas a visita será registrada.
-            const response = await fetch('https://ipapi.co/city/');
+            const response = await fetch('https://ipapi.co/json/');
             if (response.ok) {
-              city = await response.text();
+              const data = await response.json();
+              city = data.city || 'Desconhecida';
+              region = data.region || 'N/A';
+              ip = data.ip || 'N/A';
             }
           } catch (geoError) {
-            console.error("Geolocation API call failed, proceeding with 'Desconhecida'.", geoError);
+            console.error("Geolocation API call failed, proceeding with default values.", geoError);
           }
 
           const visitsCollection = collection(db, 'visits');
           await addDoc(visitsCollection, {
             createdAt: serverTimestamp(),
             city: city,
+            region: region,
+            ip: ip,
           });
 
           localStorage.setItem('lastVisitDate', today);
-          console.log(`Visit tracked for city: ${city}`);
+          console.log(`Visit tracked for city: ${city}, ${region} from IP: ${ip}`);
         } catch (error) {
           console.error("Failed to track visit:", error);
         }

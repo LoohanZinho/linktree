@@ -19,6 +19,7 @@ import {
   MapPin,
   Building,
   MousePointerClick,
+  Copy
 } from 'lucide-react';
 import Image from 'next/image';
 import {
@@ -44,6 +45,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -146,6 +157,8 @@ type Visit = {
   id: string;
   createdAt: Timestamp;
   city?: string;
+  region?: string;
+  ip?: string;
 };
 
 type TrafficSource = {
@@ -191,7 +204,9 @@ export default function AdminDashboard() {
   const [trafficChartData, setTrafficChartData] = React.useState<ChartDataPoint[]>([]);
   const [topCities, setTopCities] = React.useState<TopCity[]>([]);
   const [uniqueCitiesCount, setUniqueCitiesCount] = React.useState(0);
+  const [selectedVisitIp, setSelectedVisitIp] = React.useState<string | null>(null);
   const isMobile = useIsMobile();
+  const { toast } = useToast();
 
   React.useEffect(() => {
     // Set initial date range on client to avoid hydration mismatch
@@ -298,7 +313,9 @@ export default function AdminDashboard() {
         const cityCounts: { [city: string]: number } = {};
         visitData.forEach(visit => {
             const city = visit.city || 'Desconhecida';
-            cityCounts[city] = (cityCounts[city] || 0) + 1;
+            const region = visit.region && visit.region !== 'N/A' ? visit.region : '';
+            const location = city === 'Desconhecida' ? 'Desconhecida' : `${city}, ${region}`;
+            cityCounts[location] = (cityCounts[location] || 0) + 1;
         });
 
         const sortedCities = Object.entries(cityCounts)
@@ -456,29 +473,35 @@ export default function AdminDashboard() {
           <ScrollArea className="h-[300px] w-full">
             <ul className="space-y-4 pr-4">
               {visits.length > 0 ? (
-                visits.map((visit) => (
-                  <li
-                    key={visit.id}
-                    className="flex flex-wrap justify-between items-center text-sm font-medium gap-2"
-                  >
-                    <span className="text-gray-300 flex items-center gap-2 truncate">
-                      <MapPin className="h-4 w-4 flex-shrink-0" />
-                      <span className="truncate">
-                        {visit.city || 'Desconhecida'}
+                visits.map((visit) => {
+                  const location = visit.city === 'Desconhecida'
+                    ? 'Desconhecida'
+                    : `${visit.city}, ${visit.region}`;
+                  return (
+                    <li
+                      key={visit.id}
+                      className="flex flex-wrap justify-between items-center text-sm font-medium gap-2 cursor-pointer hover:bg-white/5 p-2 rounded-md transition-colors"
+                      onClick={() => setSelectedVisitIp(visit.ip ?? null)}
+                    >
+                      <span className="text-gray-300 flex items-center gap-2 truncate">
+                        <MapPin className="h-4 w-4 flex-shrink-0" />
+                        <span className="truncate">
+                          {location}
+                        </span>
                       </span>
-                    </span>
-                    <span className="text-gray-500 flex items-center gap-2 text-xs">
-                      <Clock className="h-4 w-4" />
-                      {visit.createdAt
-                        ? format(
-                            visit.createdAt.toDate(),
-                            'HH:mm dd/MM/yyyy',
-                            { locale: ptBR }
-                          )
-                        : '...'}
-                    </span>
-                  </li>
-                ))
+                      <span className="text-gray-500 flex items-center gap-2 text-xs">
+                        <Clock className="h-4 w-4" />
+                        {visit.createdAt
+                          ? format(
+                              visit.createdAt.toDate(),
+                              'HH:mm dd/MM/yyyy',
+                              { locale: ptBR }
+                            )
+                          : '...'}
+                      </span>
+                    </li>
+                  );
+                })
               ) : (
                 <p className="text-gray-400 text-center pt-8">
                   Nenhuma visita registrada ainda.
@@ -553,7 +576,7 @@ export default function AdminDashboard() {
                  <Table>
                     <TableHeader>
                         <TableRow className="border-white/10 hover:bg-transparent">
-                        <TableHead className="text-white">Cidade</TableHead>
+                        <TableHead className="text-white">Localização</TableHead>
                         <TableHead className="text-right text-white">Visitas</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -711,6 +734,14 @@ export default function AdminDashboard() {
     )
   }
 
+    const copyIpToClipboard = (ip: string) => {
+        navigator.clipboard.writeText(ip);
+        toast({
+            title: 'Copiado!',
+            description: 'Endereço de IP copiado para a área de transferência.',
+        });
+    };
+
   const trafficChartConfig = {
     ...chartConfig,
     'WhatsApp': { label: 'WhatsApp', color: 'rgba(255, 255, 255, 0.9)' },
@@ -825,6 +856,40 @@ export default function AdminDashboard() {
             <DangerousActions />
         </div>
       </main>
+
+        <Dialog open={!!selectedVisitIp} onOpenChange={() => setSelectedVisitIp(null)}>
+            <DialogContent className="sm:max-w-md bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+                <DialogHeader>
+                    <DialogTitle>Endereço de IP</DialogTitle>
+                    <DialogDescription className="text-gray-400">
+                        Este é o endereço de IP do visitante.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="flex items-center space-x-2">
+                    <Input
+                        id="ip-address"
+                        readOnly
+                        defaultValue={selectedVisitIp || ''}
+                        className="flex-1 bg-black/20 border-white/10"
+                    />
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => copyIpToClipboard(selectedVisitIp!)}
+                        className="bg-black/20 border-white/10 hover:bg-black/40"
+                    >
+                        <Copy className="h-4 w-4" />
+                    </Button>
+                </div>
+                <DialogFooter className="sm:justify-start">
+                    <DialogClose asChild>
+                        <Button type="button" variant="secondary" className="bg-transparent hover:bg-white/10 border-white/20">
+                            Fechar
+                        </Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
   );
 }
