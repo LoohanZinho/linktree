@@ -33,6 +33,8 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from '@/hooks/use-mobile';
+
 
 import { Button } from '@/components/ui/button';
 import {
@@ -180,10 +182,7 @@ const trafficSourceLabels: { [key: string]: string } = {
 };
 
 export default function AdminDashboard() {
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-    from: subDays(new Date(), 6),
-    to: new Date(),
-  });
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>(undefined);
   const [visits, setVisits] = React.useState<Visit[]>([]);
   const [clicks, setClicks] = React.useState<Click[]>([]);
   const [trafficSources, setTrafficSources] = React.useState<TrafficSource[]>([]);
@@ -191,9 +190,20 @@ export default function AdminDashboard() {
   const [trafficChartData, setTrafficChartData] = React.useState<ChartDataPoint[]>([]);
   const [topCities, setTopCities] = React.useState<TopCity[]>([]);
   const [uniqueCitiesCount, setUniqueCitiesCount] = React.useState(0);
+  const isMobile = useIsMobile();
+
+  React.useEffect(() => {
+    // Set initial date range on client to avoid hydration mismatch
+    setDateRange({
+        from: subDays(new Date(), 6),
+        to: new Date(),
+    });
+  }, []);
 
   // Effect to fetch data from Firestore
   React.useEffect(() => {
+    if (!dateRange?.from) return;
+
     const fetchFirestoreData = (collectionName: string, setData: (data: any[]) => void) => {
       let dataQuery = query(collection(db, collectionName));
       
@@ -241,13 +251,19 @@ export default function AdminDashboard() {
       dataKeys: string[]
     ) => {
       const now = new Date();
-      const from = dateRange?.from || subDays(now, 6);
-      const to = dateRange?.to || now;
-      let interval;
+      const from = dateRange?.from;
+      const to = dateRange?.to;
+
+      if (!from || !to || from > to) {
+        return [];
+      }
+
+      let interval: Date[];
       try {
         interval = eachDayOfInterval({ start: from, end: to });
       } catch (error) {
-        interval = [from];
+        console.error("Error creating date interval:", error);
+        return [];
       }
       
       const dataByDate: { [date: string]: ChartDataPoint } = {};
@@ -325,6 +341,22 @@ export default function AdminDashboard() {
   }) => {
     const chartId = React.useId().replace(/:/g, '');
 
+    if (data.length < 2) {
+      return (
+        <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription className="text-gray-400">
+              {description}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="h-[250px] flex items-center justify-center">
+             <p className="text-gray-400">Não há dados suficientes para exibir o gráfico.</p>
+          </CardContent>
+        </Card>
+      );
+    }
+
     return (
       <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
         <CardHeader>
@@ -335,7 +367,7 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[250px] w-full">
-            <AreaChart data={data} accessibilityLayer margin={{ left: 12, right: 12 }}>
+            <AreaChart data={data} accessibilityLayer margin={{ right: 12 }}>
               <defs>
                 {Object.keys(chartConfig).map((key) => {
                   const color =
@@ -368,33 +400,14 @@ export default function AdminDashboard() {
                 axisLine={false}
                 stroke="rgba(255,255,255,0.7)"
                 tickMargin={8}
-                interval={Math.floor((data.length -1) / 7)}
-                tickFormatter={(value, index) => {
+                interval={data.length <= 7 ? 0 : (isMobile ? Math.max(0, Math.floor((data.length -1) / 3)) : Math.max(0, Math.floor((data.length -1) / 7)))}
+                tickFormatter={(value) => {
                     const date = new Date(value);
                     const formattedDate = format(new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000), 'dd/MM');
                     return formattedDate;
                 }}
-                tick={(props) => {
-                    const { x, y, payload, index } = props;
-                    let textAnchor = "middle";
-                    let dx = 0;
-                    if (index === 0 && data.length > 1) {
-                        textAnchor = "start";
-                    }
-                    if (index === data.length - 1 && data.length > 1) {
-                        textAnchor = "end";
-                    }
-
-                    return (
-                        <g transform={`translate(${x},${y})`}>
-                            <text x={0} y={0} dy={16} dx={dx} textAnchor={textAnchor} fill="rgba(255,255,255,0.7)" fontSize={12}>
-                               {format(new Date(payload.value.replace(/-/g, '/')), 'dd/MM')}
-                            </text>
-                        </g>
-                    );
-                }}
               />
-              <YAxis stroke="rgba(255,255,255,0.7)" hide />
+              <YAxis stroke="rgba(255,255,255,0.7)" hide={isMobile} width={isMobile ? 0 : undefined} />
               <ChartTooltip
                 content={
                   <ChartTooltipContent className="bg-black/80 backdrop-blur-md border-white/10 text-white" />
@@ -432,20 +445,20 @@ export default function AdminDashboard() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <ul className="space-y-4">
+                <ul className="space-y-4 max-h-[300px] overflow-y-auto">
                     {visits.length > 0 ? visits.map((visit) => (
-                        <li key={visit.id} className="flex justify-between items-center text-sm font-medium">
-                            <span className="text-gray-300 flex items-center gap-2">
-                                <MapPin className="h-4 w-4" />
-                                {visit.city || 'Desconhecida'}
+                        <li key={visit.id} className="flex flex-wrap justify-between items-center text-sm font-medium gap-2">
+                            <span className="text-gray-300 flex items-center gap-2 truncate">
+                                <MapPin className="h-4 w-4 flex-shrink-0" />
+                                <span className="truncate">{visit.city || 'Desconhecida'}</span>
                             </span>
-                            <span className="text-gray-500 flex items-center gap-2">
+                            <span className="text-gray-500 flex items-center gap-2 text-xs">
                                 <Clock className="h-4 w-4" />
                                 {visit.createdAt ? format(visit.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
                             </span>
                         </li>
                     )) : (
-                        <p className="text-gray-400">Nenhuma visita registrada ainda.</p>
+                        <p className="text-gray-400 text-center py-8">Nenhuma visita registrada ainda.</p>
                     )}
                 </ul>
             </CardContent>
@@ -463,20 +476,20 @@ export default function AdminDashboard() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <ul className="space-y-4">
+                <ul className="space-y-4 max-h-[300px] overflow-y-auto">
                     {clicks.length > 0 ? clicks.map((click) => (
-                        <li key={click.id} className="flex justify-between items-center text-sm font-medium">
-                            <span className="text-gray-300 flex items-center gap-2">
-                                <MousePointerClick className="h-4 w-4" />
-                                {linkIdLabels[click.linkId] || click.linkId}
+                        <li key={click.id} className="flex flex-wrap justify-between items-center text-sm font-medium gap-2">
+                            <span className="text-gray-300 flex items-center gap-2 truncate">
+                                <MousePointerClick className="h-4 w-4 flex-shrink-0" />
+                                <span className="truncate">{linkIdLabels[click.linkId] || click.linkId}</span>
                             </span>
-                            <span className="text-gray-500 flex items-center gap-2">
+                            <span className="text-gray-500 flex items-center gap-2 text-xs">
                                 <Clock className="h-4 w-4" />
                                 {click.createdAt ? format(click.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
                             </span>
                         </li>
                     )) : (
-                        <p className="text-gray-400">Nenhum clique registrado ainda.</p>
+                        <p className="text-gray-400 text-center py-8">Nenhum clique registrado ainda.</p>
                     )}
                 </ul>
             </CardContent>
@@ -505,14 +518,14 @@ export default function AdminDashboard() {
                     <TableBody>
                         {topCities.map(({ city, count }) => (
                         <TableRow key={city} className="border-white/10 hover:bg-white/5">
-                            <TableCell className="font-medium">{city}</TableCell>
+                            <TableCell className="font-medium truncate">{city}</TableCell>
                             <TableCell className="text-right">{count}</TableCell>
                         </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             ) : (
-                <p className="text-gray-400 text-center">Nenhuma visita registrada ainda.</p>
+                <p className="text-gray-400 text-center py-8">Nenhuma visita registrada ainda.</p>
             )}
         </CardContent>
       </Card>
@@ -529,17 +542,17 @@ export default function AdminDashboard() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <ul className="space-y-4">
+                <ul className="space-y-4 max-h-[300px] overflow-y-auto">
                     {trafficSources.length > 0 ? trafficSources.map((source) => (
-                        <li key={source.id} className="flex justify-between items-center text-sm font-medium">
-                            <span className="text-gray-300">{trafficSourceLabels[source.source] || source.source}</span>
-                            <span className="text-gray-500 flex items-center gap-2">
+                        <li key={source.id} className="flex flex-wrap justify-between items-center text-sm font-medium gap-2">
+                            <span className="text-gray-300 truncate">{trafficSourceLabels[source.source] || source.source}</span>
+                            <span className="text-gray-500 flex items-center gap-2 text-xs">
                                 <Clock className="h-4 w-4" />
                                 {source.createdAt ? format(source.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
                             </span>
                         </li>
                     )) : (
-                        <p className="text-gray-400">Nenhuma fonte de tráfego registrada ainda.</p>
+                        <p className="text-gray-400 text-center py-8">Nenhuma fonte de tráfego registrada ainda.</p>
                     )}
                 </ul>
             </CardContent>
@@ -679,7 +692,7 @@ export default function AdminDashboard() {
         data-ai-hint="abstract background"
       />
       <main className="flex flex-1 flex-col gap-6 p-4 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
           <h1 className="text-2xl font-semibold flex-shrink-0">
             Dashboard de Análise
           </h1>
