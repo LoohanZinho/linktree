@@ -365,8 +365,11 @@ export default function AdminDashboard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-[250px] w-full">
-            <AreaChart data={data} accessibilityLayer margin={{ right: isMobile ? 0 : 12, left: isMobile ? -20 : 0 }}>
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-video h-[250px] w-full lg:-ml-8"
+          >
+            <AreaChart data={data} accessibilityLayer>
               <defs>
                 {Object.keys(chartConfig).map((key) => {
                   const color =
@@ -406,7 +409,11 @@ export default function AdminDashboard() {
                     return formattedDate;
                 }}
               />
-              <YAxis stroke="rgba(255,255,255,0.7)" hide={isMobile} width={isMobile ? 0 : undefined} />
+              <YAxis
+                stroke="rgba(255,255,255,0.7)"
+                hide={isMobile}
+                width={isMobile ? 0 : undefined}
+              />
               <ChartTooltip
                 content={
                   <ChartTooltipContent className="bg-black/80 backdrop-blur-md border-white/10 text-white" />
