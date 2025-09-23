@@ -250,7 +250,6 @@ export default function AdminDashboard() {
       keyField: 'linkId' | 'source',
       dataKeys: string[]
     ) => {
-      const now = new Date();
       const from = dateRange?.from;
       const to = dateRange?.to;
 
@@ -367,7 +366,7 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[250px] w-full">
-            <AreaChart data={data} accessibilityLayer margin={{ right: 12 }}>
+            <AreaChart data={data} accessibilityLayer margin={{ right: isMobile ? 0 : 12, left: isMobile ? -20 : 0 }}>
               <defs>
                 {Object.keys(chartConfig).map((key) => {
                   const color =
