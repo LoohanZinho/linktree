@@ -79,39 +79,39 @@ const chartConfig = {
   },
   whatsapp: {
     label: 'WhatsApp',
-    color: 'hsl(var(--chart-1))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   instagram: {
     label: 'Instagram',
-    color: 'hsl(var(--chart-2))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   tiktok: {
     label: 'TikTok',
-    color: 'hsl(var(--chart-3))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   youtube: {
     label: 'YouTube',
-    color: 'hsl(var(--chart-4))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   discord: {
     label: 'Discord',
-    color: 'hsl(var(--chart-5))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   'gerente-inteligente': {
     label: 'Gerente Inteligente',
-    color: 'hsl(var(--chart-1))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   'gerente-inteligente-ia': {
     label: 'Gerente Inteligente IA',
-    color: 'hsl(var(--chart-2))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   'lucrando-lci': {
     label: 'Lucrando com Influenciadores',
-    color: 'hsl(var(--chart-3))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
   'deposito-aguas-brancas': {
     label: 'Depósito Águas Brancas',
-    color: 'hsl(var(--chart-4))',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
 } satisfies ChartConfig;
 
@@ -413,7 +413,6 @@ export default function AdminDashboard() {
               <YAxis
                 stroke="rgba(255,255,255,0.7)"
                 hide={isMobile}
-                width={isMobile ? 0 : undefined}
               />
               <ChartTooltip
                 cursor={false}
@@ -662,9 +661,9 @@ export default function AdminDashboard() {
 
   const trafficChartConfig = {
     ...chartConfig,
-    'WhatsApp': { label: 'WhatsApp', color: 'hsl(var(--chart-1))' },
-    'Instagram': { label: 'Instagram', color: 'hsl(var(--chart-2))' },
-    'TikTok': { label: 'TikTok', color: 'hsl(var(--chart-3))' },
+    'WhatsApp': { label: 'WhatsApp', color: 'rgba(255, 255, 255, 0.9)' },
+    'Instagram': { label: 'Instagram', color: 'rgba(255, 255, 255, 0.9)' },
+    'TikTok': { label: 'TikTok', color: 'rgba(255, 255, 255, 0.9)' },
   };
   
   const projectChartData = chartData.map(item => {
