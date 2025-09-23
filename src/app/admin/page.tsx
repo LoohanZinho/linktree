@@ -69,6 +69,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { DatePickerWithRange } from '@/components/ui/date-picker-with-range';
 import type { DateRange } from 'react-day-picker';
@@ -444,63 +445,97 @@ export default function AdminDashboard() {
   
   const VisitLog = () => {
     return (
-        <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
-            <CardHeader>
-                <CardTitle>Log de Visitas</CardTitle>
-                <CardDescription className="text-gray-400">
-                    Todas as visitas ao site em ordem cronológica.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ul className="space-y-4 max-h-[300px] overflow-y-auto">
-                    {visits.length > 0 ? visits.map((visit) => (
-                        <li key={visit.id} className="flex flex-wrap justify-between items-center text-sm font-medium gap-2">
-                            <span className="text-gray-300 flex items-center gap-2 truncate">
-                                <MapPin className="h-4 w-4 flex-shrink-0" />
-                                <span className="truncate">{visit.city || 'Desconhecida'}</span>
-                            </span>
-                            <span className="text-gray-500 flex items-center gap-2 text-xs">
-                                <Clock className="h-4 w-4" />
-                                {visit.createdAt ? format(visit.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
-                            </span>
-                        </li>
-                    )) : (
-                        <p className="text-gray-400 text-center py-8">Nenhuma visita registrada ainda.</p>
-                    )}
-                </ul>
-            </CardContent>
-        </Card>
+      <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+        <CardHeader>
+          <CardTitle>Log de Visitas</CardTitle>
+          <CardDescription className="text-gray-400">
+            Todas as visitas ao site em ordem cronológica.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[300px] w-full">
+            <ul className="space-y-4 pr-4">
+              {visits.length > 0 ? (
+                visits.map((visit) => (
+                  <li
+                    key={visit.id}
+                    className="flex flex-wrap justify-between items-center text-sm font-medium gap-2"
+                  >
+                    <span className="text-gray-300 flex items-center gap-2 truncate">
+                      <MapPin className="h-4 w-4 flex-shrink-0" />
+                      <span className="truncate">
+                        {visit.city || 'Desconhecida'}
+                      </span>
+                    </span>
+                    <span className="text-gray-500 flex items-center gap-2 text-xs">
+                      <Clock className="h-4 w-4" />
+                      {visit.createdAt
+                        ? format(
+                            visit.createdAt.toDate(),
+                            'HH:mm dd/MM/yyyy',
+                            { locale: ptBR }
+                          )
+                        : '...'}
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <p className="text-gray-400 text-center pt-8">
+                  Nenhuma visita registrada ainda.
+                </p>
+              )}
+            </ul>
+          </ScrollArea>
+        </CardContent>
+      </Card>
     );
   }
 
-    const ClickLog = () => {
+  const ClickLog = () => {
     return (
-        <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
-            <CardHeader>
-                <CardTitle>Log de Cliques</CardTitle>
-                <CardDescription className="text-gray-400">
-                    Todos os cliques registrados em ordem cronológica.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ul className="space-y-4 max-h-[300px] overflow-y-auto">
-                    {clicks.length > 0 ? clicks.map((click) => (
-                        <li key={click.id} className="flex flex-wrap justify-between items-center text-sm font-medium gap-2">
-                            <span className="text-gray-300 flex items-center gap-2 truncate">
-                                <MousePointerClick className="h-4 w-4 flex-shrink-0" />
-                                <span className="truncate">{linkIdLabels[click.linkId] || click.linkId}</span>
-                            </span>
-                            <span className="text-gray-500 flex items-center gap-2 text-xs">
-                                <Clock className="h-4 w-4" />
-                                {click.createdAt ? format(click.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
-                            </span>
-                        </li>
-                    )) : (
-                        <p className="text-gray-400 text-center py-8">Nenhum clique registrado ainda.</p>
-                    )}
-                </ul>
-            </CardContent>
-        </Card>
+      <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+        <CardHeader>
+          <CardTitle>Log de Cliques</CardTitle>
+          <CardDescription className="text-gray-400">
+            Todos os cliques registrados em ordem cronológica.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[300px] w-full">
+            <ul className="space-y-4 pr-4">
+              {clicks.length > 0 ? (
+                clicks.map((click) => (
+                  <li
+                    key={click.id}
+                    className="flex flex-wrap justify-between items-center text-sm font-medium gap-2"
+                  >
+                    <span className="text-gray-300 flex items-center gap-2 truncate">
+                      <MousePointerClick className="h-4 w-4 flex-shrink-0" />
+                      <span className="truncate">
+                        {linkIdLabels[click.linkId] || click.linkId}
+                      </span>
+                    </span>
+                    <span className="text-gray-500 flex items-center gap-2 text-xs">
+                      <Clock className="h-4 w-4" />
+                      {click.createdAt
+                        ? format(
+                            click.createdAt.toDate(),
+                            'HH:mm dd/MM/yyyy',
+                            { locale: ptBR }
+                          )
+                        : '...'}
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <p className="text-gray-400 text-center pt-8">
+                  Nenhum clique registrado ainda.
+                </p>
+              )}
+            </ul>
+          </ScrollArea>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -541,29 +576,46 @@ export default function AdminDashboard() {
 
   const TrafficLog = () => {
     return (
-        <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
-            <CardHeader>
-                <CardTitle>Log de Fontes de Tráfego</CardTitle>
-                <CardDescription className="text-gray-400">
-                    Todas as fontes de tráfego registradas em ordem cronológica.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ul className="space-y-4 max-h-[300px] overflow-y-auto">
-                    {trafficSources.length > 0 ? trafficSources.map((source) => (
-                        <li key={source.id} className="flex flex-wrap justify-between items-center text-sm font-medium gap-2">
-                            <span className="text-gray-300 truncate">{trafficSourceLabels[source.source] || source.source}</span>
-                            <span className="text-gray-500 flex items-center gap-2 text-xs">
-                                <Clock className="h-4 w-4" />
-                                {source.createdAt ? format(source.createdAt.toDate(), 'HH:mm dd/MM/yyyy', { locale: ptBR }) : '...'}
-                            </span>
-                        </li>
-                    )) : (
-                        <p className="text-gray-400 text-center py-8">Nenhuma fonte de tráfego registrada ainda.</p>
-                    )}
-                </ul>
-            </CardContent>
-        </Card>
+      <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
+        <CardHeader>
+          <CardTitle>Log de Fontes de Tráfego</CardTitle>
+          <CardDescription className="text-gray-400">
+            Todas as fontes de tráfego registradas em ordem cronológica.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[300px] w-full">
+            <ul className="space-y-4 pr-4">
+              {trafficSources.length > 0 ? (
+                trafficSources.map((source) => (
+                  <li
+                    key={source.id}
+                    className="flex flex-wrap justify-between items-center text-sm font-medium gap-2"
+                  >
+                    <span className="text-gray-300 truncate">
+                      {trafficSourceLabels[source.source] || source.source}
+                    </span>
+                    <span className="text-gray-500 flex items-center gap-2 text-xs">
+                      <Clock className="h-4 w-4" />
+                      {source.createdAt
+                        ? format(
+                            source.createdAt.toDate(),
+                            'HH:mm dd/MM/yyyy',
+                            { locale: ptBR }
+                          )
+                        : '...'}
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <p className="text-gray-400 text-center pt-8">
+                  Nenhuma fonte de tráfego registrada ainda.
+                </p>
+              )}
+            </ul>
+          </ScrollArea>
+        </CardContent>
+      </Card>
     );
   }
 
