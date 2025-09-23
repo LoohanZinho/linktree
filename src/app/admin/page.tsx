@@ -314,7 +314,7 @@ export default function AdminDashboard() {
         visitData.forEach(visit => {
             const city = visit.city || 'Desconhecida';
             const region = visit.region && visit.region !== 'N/A' ? visit.region : '';
-            const location = city === 'Desconhecida' ? 'Desconhecida' : `${city}, ${region}`;
+            const location = city === 'Desconhecida' ? 'Desconhecida' : (region ? `${city}, ${region}` : city);
             cityCounts[location] = (cityCounts[location] || 0) + 1;
         });
 
@@ -474,9 +474,10 @@ export default function AdminDashboard() {
             <ul className="space-y-4 pr-4">
               {visits.length > 0 ? (
                 visits.map((visit) => {
-                  const location = visit.city === 'Desconhecida'
-                    ? 'Desconhecida'
-                    : `${visit.city}, ${visit.region}`;
+                  const city = visit.city || 'Desconhecida';
+                  const region = visit.region && visit.region !== 'N/A' ? visit.region : null;
+                  const location = city === 'Desconhecida' ? 'Desconhecida' : (region ? `${city}, ${region}` : city);
+                  
                   return (
                     <li
                       key={visit.id}
