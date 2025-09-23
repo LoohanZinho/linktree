@@ -697,7 +697,7 @@ export default function AdminDashboard() {
         className="object-cover -z-10 brightness-50"
         data-ai-hint="abstract background"
       />
-      <main className="flex flex-1 flex-col gap-6 p-4 sm:p-6">
+      <main className="flex flex-1 flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
         <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
           <h1 className="text-2xl font-semibold flex-shrink-0">
             Dashboard de Análise
