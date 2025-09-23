@@ -339,17 +339,18 @@ export default function AdminDashboard() {
     chartConfig: ChartConfig;
   }) => {
     const chartId = React.useId().replace(/:/g, '');
+    const headerClass = "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2";
 
     if (data.length < 2) {
       return (
         <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
-          <CardHeader>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription className="text-gray-400">
-              {description}
-            </CardDescription>
+          <CardHeader className={headerClass}>
+            <div>
+              <CardTitle>{title}</CardTitle>
+              <CardDescription className="text-gray-400">{description}</CardDescription>
+            </div>
           </CardHeader>
-          <CardContent className="h-[250px] flex items-center justify-center">
+          <CardContent className="px-2 pt-4 pb-6 sm:px-4 h-[180px] sm:h-[220px] md:h-[250px] flex items-center justify-center">
              <p className="text-gray-400">Não há dados suficientes para exibir o gráfico.</p>
           </CardContent>
         </Card>
@@ -358,18 +359,18 @@ export default function AdminDashboard() {
 
     return (
       <Card className="bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-2xl">
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription className="text-gray-400">
-            {description}
-          </CardDescription>
+        <CardHeader className={headerClass}>
+          <div>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription className="text-gray-400">{description}</CardDescription>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-2 pt-4 pb-6 sm:px-4">
           <ChartContainer
             config={chartConfig}
-            className="aspect-video h-[250px] w-full lg:-ml-8"
+            className="w-full h-[180px] sm:h-[220px] md:h-[250px]"
           >
-            <AreaChart data={data} accessibilityLayer>
+            <AreaChart data={data} accessibilityLayer margin={{ left: isMobile ? -20 : 0, right: 12, top: 4, bottom: 0 }} >
               <defs>
                 {Object.keys(chartConfig).map((key) => {
                   const color =
@@ -402,7 +403,7 @@ export default function AdminDashboard() {
                 axisLine={false}
                 stroke="rgba(255,255,255,0.7)"
                 tickMargin={8}
-                interval={data.length <= 7 ? 0 : (isMobile ? Math.max(0, Math.floor((data.length -1) / 3)) : Math.max(0, Math.floor((data.length -1) / 7)))}
+                interval={isMobile ? 0 : Math.max(0, Math.floor((data.length -1) / 7))}
                 tickFormatter={(value) => {
                     const date = new Date(value);
                     const formattedDate = format(new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000), 'dd/MM');
@@ -415,8 +416,9 @@ export default function AdminDashboard() {
                 width={isMobile ? 0 : undefined}
               />
               <ChartTooltip
+                cursor={false}
                 content={
-                  <ChartTooltipContent className="bg-black/80 backdrop-blur-md border-white/10 text-white" />
+                  <ChartTooltipContent className="bg-black/80 backdrop-blur-md border-white/10 text-white" indicator="dot" />
                 }
               />
               {dataKeys.map((key) => {
