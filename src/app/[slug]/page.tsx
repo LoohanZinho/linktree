@@ -23,7 +23,7 @@ export default function SlugTrackerPage() {
   useEffect(() => {
     const trackAndRedirect = async () => {
       // Verifica se o slug existe no nosso mapa
-      const source = slugToSourceMape[slug];
+      const source = slugToSourceMap[slug];
 
       if (source) {
         try {
