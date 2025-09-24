@@ -11,6 +11,7 @@ const slugToSourceMap: { [key: string]: string } = {
   zap: 'WhatsApp',
   insta: 'Instagram',
   ttk: 'TikTok',
+  yt: 'YouTube',
   // Adicione outros slugs e fontes aqui
 };
 
@@ -22,7 +23,7 @@ export default function SlugTrackerPage() {
   useEffect(() => {
     const trackAndRedirect = async () => {
       // Verifica se o slug existe no nosso mapa
-      const source = slugToSourceMap[slug];
+      const source = slugToSourceMape[slug];
 
       if (source) {
         try {
