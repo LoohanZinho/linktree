@@ -35,6 +35,7 @@ import {
 import { db } from '@/lib/firebase';
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from '@/hooks/use-mobile';
+import { FaWhatsapp, FaInstagram, FaTiktok, FaYoutube } from 'react-icons/fa';
 
 
 import { Button } from '@/components/ui/button';
@@ -193,6 +194,14 @@ const trafficSourceLabels: { [key: string]: string } = {
     'WhatsApp': 'WhatsApp',
     'Instagram': 'Instagram',
     'TikTok': 'TikTok',
+    'YouTube': 'YouTube',
+};
+
+const trafficSourceIcons: { [key: string]: React.ElementType } = {
+    'WhatsApp': FaWhatsapp,
+    'Instagram': FaInstagram,
+    'TikTok': FaTiktok,
+    'YouTube': FaYoutube,
 };
 
 export default function AdminDashboard() {
@@ -333,7 +342,7 @@ export default function AdminDashboard() {
       'deposito-aguas-brancas',
     ];
     const socialKeys = ['whatsapp', 'instagram', 'tiktok', 'youtube', 'discord'];
-    const trafficKeys = ['WhatsApp', 'Instagram', 'TikTok'];
+    const trafficKeys = ['WhatsApp', 'Instagram', 'TikTok', 'YouTube'];
 
     const allClickKeys = [...projectKeys, ...socialKeys];
 
@@ -611,26 +620,32 @@ export default function AdminDashboard() {
           <ScrollArea className="h-[300px] w-full">
             <ul className="space-y-4 pr-4">
               {trafficSources.length > 0 ? (
-                trafficSources.map((source) => (
-                  <li
-                    key={source.id}
-                    className="flex flex-wrap justify-between items-center text-sm font-medium gap-2"
-                  >
-                    <span className="text-gray-300 truncate">
-                      {trafficSourceLabels[source.source] || source.source}
-                    </span>
-                    <span className="text-gray-500 flex items-center gap-2 text-xs">
-                      <Clock className="h-4 w-4" />
-                      {source.createdAt
-                        ? format(
-                            source.createdAt.toDate(),
-                            'HH:mm dd/MM/yyyy',
-                            { locale: ptBR }
-                          )
-                        : '...'}
-                    </span>
-                  </li>
-                ))
+                trafficSources.map((source) => {
+                  const Icon = trafficSourceIcons[source.source];
+                  return (
+                    <li
+                      key={source.id}
+                      className="flex flex-wrap justify-between items-center text-sm font-medium gap-2"
+                    >
+                      <span className="text-gray-300 flex items-center gap-2 truncate">
+                        {Icon && <Icon className="h-4 w-4 flex-shrink-0" />}
+                        <span className="truncate">
+                          {trafficSourceLabels[source.source] || source.source}
+                        </span>
+                      </span>
+                      <span className="text-gray-500 flex items-center gap-2 text-xs">
+                        <Clock className="h-4 w-4" />
+                        {source.createdAt
+                          ? format(
+                              source.createdAt.toDate(),
+                              'HH:mm dd/MM/yyyy',
+                              { locale: ptBR }
+                            )
+                          : '...'}
+                      </span>
+                    </li>
+                  );
+                })
               ) : (
                 <p className="text-gray-400 text-center pt-8">
                   Nenhuma fonte de tráfego registrada ainda.
@@ -748,6 +763,7 @@ export default function AdminDashboard() {
     'WhatsApp': { label: 'WhatsApp', color: 'rgba(255, 255, 255, 0.9)' },
     'Instagram': { label: 'Instagram', color: 'rgba(255, 255, 255, 0.9)' },
     'TikTok': { label: 'TikTok', color: 'rgba(255, 255, 255, 0.9)' },
+    'YouTube': { label: 'YouTube', color: 'rgba(255, 255, 255, 0.9)' },
   };
   
   const projectChartData = chartData.map(item => {
@@ -841,7 +857,7 @@ export default function AdminDashboard() {
               data={trafficChartData}
               title="Fontes de Tráfego"
               description="Total de visitas por dia de cada fonte de tráfego."
-              dataKeys={['WhatsApp', 'Instagram', 'TikTok']}
+              dataKeys={['WhatsApp', 'Instagram', 'TikTok', 'YouTube']}
               chartConfig={trafficChartConfig}
             />
         </div>
